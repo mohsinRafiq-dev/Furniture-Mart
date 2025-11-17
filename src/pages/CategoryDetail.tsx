@@ -2,7 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiClient } from "../services/api/client";
-import { ArrowLeft, Eye, Star, Loader, X, ShoppingCart, ZoomIn, ZoomOut } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  Star,
+  Loader,
+  X,
+  ShoppingCart,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 
 export default function CategoryDetail() {
   const { categorySlug } = useParams<{ categorySlug: string }>();
@@ -416,7 +425,9 @@ export default function CategoryDetail() {
                       {/* Zoom Controls */}
                       <div className="flex items-center justify-center gap-4">
                         <motion.button
-                          onClick={() => setQuickViewZoom(Math.max(1, quickViewZoom - 0.2))}
+                          onClick={() =>
+                            setQuickViewZoom(Math.max(1, quickViewZoom - 0.2))
+                          }
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                           className="p-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors"
@@ -428,7 +439,9 @@ export default function CategoryDetail() {
                           {Math.round(quickViewZoom * 100)}%
                         </span>
                         <motion.button
-                          onClick={() => setQuickViewZoom(Math.min(3, quickViewZoom + 0.2))}
+                          onClick={() =>
+                            setQuickViewZoom(Math.min(3, quickViewZoom + 0.2))
+                          }
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                           className="p-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"

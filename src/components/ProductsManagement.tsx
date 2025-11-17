@@ -759,7 +759,9 @@ export default function ProductsManagement({
                       {/* Zoom Controls */}
                       <div className="flex items-center justify-center gap-3">
                         <motion.button
-                          onClick={() => setImageGridZoom(Math.max(0.5, imageGridZoom - 0.2))}
+                          onClick={() =>
+                            setImageGridZoom(Math.max(0.5, imageGridZoom - 0.2))
+                          }
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded transition-colors"
@@ -771,7 +773,9 @@ export default function ProductsManagement({
                           {Math.round(imageGridZoom * 100)}%
                         </span>
                         <motion.button
-                          onClick={() => setImageGridZoom(Math.min(2, imageGridZoom + 0.2))}
+                          onClick={() =>
+                            setImageGridZoom(Math.min(2, imageGridZoom + 0.2))
+                          }
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className="p-2 bg-amber-600 hover:bg-amber-700 text-white rounded transition-colors"
@@ -791,10 +795,13 @@ export default function ProductsManagement({
                       </div>
 
                       {/* Image Grid */}
-                      <div 
+                      <div
                         className="grid gap-3"
                         style={{
-                          gridTemplateColumns: `repeat(auto-fill, minmax(${Math.max(100, 140 * imageGridZoom)}px, 1fr))`,
+                          gridTemplateColumns: `repeat(auto-fill, minmax(${Math.max(
+                            100,
+                            140 * imageGridZoom
+                          )}px, 1fr))`,
                         }}
                       >
                         {currentProductImages.map((image, idx) => (
