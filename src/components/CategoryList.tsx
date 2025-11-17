@@ -131,7 +131,9 @@ const CategoryCard = ({ category }: { category: Category }) => {
 
   return (
     <Link
-      to={`/categories?filter=${category.slug || category.name.toLowerCase()}`}
+      to={`/categories/${
+        category.slug || category.name.toLowerCase().replace(/\s+/g, "-")
+      }`}
     >
       <motion.div
         variants={itemVariants}

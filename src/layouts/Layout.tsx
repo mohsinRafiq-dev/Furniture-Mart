@@ -172,6 +172,12 @@ function Header({
               Home
             </Link>
             <Link
+              to="/about"
+              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
+            >
+              About
+            </Link>
+            <Link
               to="/categories"
               className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
             >
@@ -182,12 +188,6 @@ function Header({
               className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
             >
               Search
-            </Link>
-            <Link
-              to="/admin"
-              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
-            >
-              Admin
             </Link>
           </div>
 
@@ -259,6 +259,13 @@ function Header({
               Home
             </Link>
             <Link
+              to="/about"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link
               to="/categories"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
               onClick={() => setMobileMenuOpen(false)}
@@ -271,13 +278,6 @@ function Header({
               onClick={() => setMobileMenuOpen(false)}
             >
               Search
-            </Link>
-            <Link
-              to="/admin"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Admin
             </Link>
           </div>
         )}

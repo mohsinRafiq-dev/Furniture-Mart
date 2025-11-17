@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import ImageCarousel from "../components/ImageCarousel";
 import VariantSelector, { ProductVariant } from "../components/VariantSelector";
-import SpecsTable, { Spec } from "../components/SpecsTable";
+import SpecsTable from "../components/SpecsTable";
 import { Button } from "../components/ui/Button";
 import { Badge } from "../components/ui/Badge";
 import { useCartStore } from "../store";
@@ -80,7 +79,6 @@ const itemVariants = {
 };
 
 export default function Product() {
-  const { slug } = useParams<{ slug: string }>();
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string>
   >({

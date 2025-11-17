@@ -3,13 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import SearchInput, { MOCK_SUGGESTIONS } from "../components/SearchInput";
 import ProductGrid, { Product } from "../components/ProductGrid";
 
-interface SearchSuggestion {
-  id: string;
-  text: string;
-  type: "product" | "category";
-  icon?: string;
-}
-
 // Mock API fetch function - Replace with actual API calls
 const fetchSearchResults = async (query: string): Promise<Product[]> => {
   // Simulate API delay
@@ -113,26 +106,6 @@ const fetchSearchResults = async (query: string): Promise<Product[]> => {
       product.name.toLowerCase().includes(lowerQuery) ||
       product.id.toLowerCase().includes(lowerQuery)
   );
-};
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5 },
-  },
 };
 
 export default function Search() {

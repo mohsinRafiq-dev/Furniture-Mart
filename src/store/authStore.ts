@@ -12,7 +12,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: "user" | "admin";
+  role: "admin" | "editor" | "viewer";
   avatar?: string;
 }
 
@@ -99,7 +99,8 @@ export const useAuthStore = create<AuthState>()(
       },
 
       isAdmin: () => {
-        return get().user?.role === "admin";
+        const role = get().user?.role;
+        return role === "admin" || role === "editor";
       },
 
       initializeAuth: () => {
@@ -112,7 +113,7 @@ export const useAuthStore = create<AuthState>()(
               id: payload.sub,
               email: payload.email,
               name: payload.name,
-              role: payload.role,
+              role: (payload.role as "admin" | "editor" | "viewer") || "viewer",
               avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
                 payload.name
               )}&background=f59e0b&color=fff`,

@@ -1,23 +1,33 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/Layout";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ScrollToTop from "./components/ScrollToTop";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useAuthStore } from "./store/authStore";
 
 // Lazy load page components
 const Home = React.lazy(() => import("./pages/Home"));
+const About = React.lazy(() => import("./pages/About"));
 const Categories = React.lazy(() => import("./pages/Categories"));
+const CategoryDetail = React.lazy(() => import("./pages/CategoryDetail"));
+const ProductDetail = React.lazy(() => import("./pages/ProductDetail"));
 const Product = React.lazy(() => import("./pages/Product"));
 const Search = React.lazy(() => import("./pages/Search"));
 const Cart = React.lazy(() => import("./pages/Cart"));
 const Checkout = React.lazy(() => import("./pages/Checkout"));
-const Admin = React.lazy(() => import("./pages/Admin"));
 const Login = React.lazy(() => import("./pages/Login"));
 const AdminPortal = React.lazy(() => import("./pages/AdminPortal"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 
 export default function App() {
+  const { initializeAuth } = useAuthStore();
+
+  // Initialize authentication on app load
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
   return (
     <Router>
       <ScrollToTop />
@@ -25,12 +35,17 @@ export default function App() {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
             <Route path="/categories" element={<Categories />} />
-            <Route path="/product/:slug" element={<Product />} />
+            <Route
+              path="/categories/:categorySlug"
+              element={<CategoryDetail />}
+            />
+            <Route path="/product/:productId" element={<ProductDetail />} />
+            <Route path="/product-old/:slug" element={<Product />} />
             <Route path="/search" element={<Search />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/admin" element={<Admin />} />
             <Route path="/login" element={<Login />} />
 
             {/* Hidden Admin Portal Route - Requires JWT Auth */}

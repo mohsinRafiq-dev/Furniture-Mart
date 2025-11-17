@@ -1,9 +1,10 @@
-import React from "react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import HeroSection from "../components/HeroSection";
 import CategoryList from "../components/CategoryList";
 import ProductGrid from "../components/ProductGrid";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { apiClient } from "../services/api/client";
 
 const FEATURED_PRODUCTS = [
   {
@@ -113,13 +114,43 @@ const containerVariants = {
 };
 
 export default function Home() {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    setLoadingCategories(true);
+    try {
+      const res = await apiClient.get<any>("/categories");
+      const apiCategories = res.data?.data?.categories || [];
+
+      // Transform API categories to match CategoryList component format
+      const transformedCategories = apiCategories.map((cat: any) => ({
+        id: cat._id,
+        name: cat.name,
+        icon: "🛋️", // You can add icon mapping if needed
+        thumbnail: cat.image,
+        slug: cat.slug,
+      }));
+
+      setCategories(transformedCategories);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white overflow-hidden">
       {/* Hero Section */}
       <HeroSection />
 
       {/* Category List Section */}
-      <CategoryList />
+      <CategoryList categories={categories} isLoading={loadingCategories} />
 
       {/* Featured Products Section */}
       <motion.section

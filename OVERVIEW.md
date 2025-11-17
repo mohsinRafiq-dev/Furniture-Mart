@@ -6,42 +6,46 @@
 
 ```typescript
 // 1️⃣ Fetch products with pagination
-import { useGetProducts } from '@/services/api';
+import { useGetProducts } from "@/services/api";
 const { data, isLoading } = useGetProducts(1, 12);
 
 // 2️⃣ Get single product by URL-friendly slug
-import { useGetProductBySlug } from '@/services/api';
-const { data: product } = useGetProductBySlug('modern-gray-sofa');
+import { useGetProductBySlug } from "@/services/api";
+const { data: product } = useGetProductBySlug("modern-gray-sofa");
 
 // 3️⃣ Advanced filtering with multiple criteria
-import { useGetProductsFiltered, buildProductFilters } from '@/services/api';
+import { useGetProductsFiltered, buildProductFilters } from "@/services/api";
 const filters = buildProductFilters({
-  search: 'sofa',
-  category: 'sofas',
+  search: "sofa",
+  category: "sofas",
   priceRange: [200, 1000],
   minRating: 4,
   inStock: true,
-  sortBy: 'price-asc'
+  sortBy: "price-asc",
 });
 const { data } = useGetProductsFiltered(filters);
 
 // 4️⃣ Admin create/update/delete
-import { useCreateProductMutation, useUpdateProductMutation } from '@/services/api';
+import {
+  useCreateProductMutation,
+  useUpdateProductMutation,
+} from "@/services/api";
 const createProduct = useCreateProductMutation();
-await createProduct({ name: 'New Product', price: 500 });
+await createProduct({ name: "New Product", price: 500 });
 
 // 5️⃣ Get categories and featured products together
-import { useGetCategoriesAndFeaturedProducts } from '@/services/api';
+import { useGetCategoriesAndFeaturedProducts } from "@/services/api";
 const { categories, featuredProducts } = useGetCategoriesAndFeaturedProducts();
 
 // 6️⃣ Cache invalidation with typed keys
-import { queryKeys, queryClient } from '@/services/api';
+import { queryKeys, queryClient } from "@/services/api";
 queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
 ```
 
 ## Files Created/Modified
 
 ### Created (4 new files)
+
 ```
 ✨ src/services/api/queryService.ts          (328 lines)
    - 30+ wrapper functions for queries and mutations
@@ -74,6 +78,7 @@ queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
 ```
 
 ### Modified (5 updated files)
+
 ```
 🔄 .env.local
    - Added: VITE_API_BASE_URL=http://localhost:5000
@@ -205,12 +210,14 @@ Commit 3: e00d54b
 ## Environment Setup
 
 ### Development (.env.local)
+
 ```env
 VITE_API_BASE_URL=http://localhost:5000
 VITE_API_URL=http://localhost:5000/api
 ```
 
 ### Production (.env.production)
+
 ```env
 VITE_API_BASE_URL=https://api.furniture-mart.com
 VITE_API_URL=https://api.furniture-mart.com/api
@@ -239,26 +246,26 @@ const { data } = useGetProducts(1, 12);
 
 ## Key Improvements
 
-| Before | After |
-|--------|-------|
-| Manual fetch calls | React Query hooks |
-| Inconsistent error handling | Centralized error handling |
-| No caching | Automatic caching with configurable times |
-| Hardcoded URLs | Environment-based configuration |
-| No type safety | Full TypeScript support |
-| Complex filtering logic | `buildProductFilters()` helper |
-| Manual cache invalidation | `queryKeys` for consistency |
-| No batch operations | `useGetCategoriesAndFeaturedProducts()` |
-| Verbose component code | Clean wrapper functions |
+| Before                      | After                                     |
+| --------------------------- | ----------------------------------------- |
+| Manual fetch calls          | React Query hooks                         |
+| Inconsistent error handling | Centralized error handling                |
+| No caching                  | Automatic caching with configurable times |
+| Hardcoded URLs              | Environment-based configuration           |
+| No type safety              | Full TypeScript support                   |
+| Complex filtering logic     | `buildProductFilters()` helper            |
+| Manual cache invalidation   | `queryKeys` for consistency               |
+| No batch operations         | `useGetCategoriesAndFeaturedProducts()`   |
+| Verbose component code      | Clean wrapper functions                   |
 
 ## Documentation Provided
 
-| Document | Purpose | Lines |
-|----------|---------|-------|
-| API_QUERY_GUIDE.md | Comprehensive guide | 550+ |
-| QUICK_REFERENCE.md | Quick patterns | 372 |
-| IMPLEMENTATION_SUMMARY.md | What was done | 244 |
-| This file | Visual overview | This |
+| Document                  | Purpose             | Lines |
+| ------------------------- | ------------------- | ----- |
+| API_QUERY_GUIDE.md        | Comprehensive guide | 550+  |
+| QUICK_REFERENCE.md        | Quick patterns      | 372   |
+| IMPLEMENTATION_SUMMARY.md | What was done       | 244   |
+| This file                 | Visual overview     | This  |
 
 ## Import Examples
 
@@ -274,7 +281,7 @@ import {
   useGetCategories,
   useGetCategoryBySlug,
   useGetMyOrders,
-  
+
   // Mutations
   useCreateProductMutation,
   useUpdateProductMutation,
@@ -284,37 +291,40 @@ import {
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
   useCreateOrderMutation,
-  
+
   // Utilities
   buildProductFilters,
   queryKeys,
   queryClient,
   prefetchProductBySlug,
   prefetchCategories,
-  
+
   // Types
   type Product,
   type Category,
   type AdvancedProductParams,
-} from '@/services/api';
+} from "@/services/api";
 
 // From @/config/api
-import { apiConfig } from '@/config/api';
+import { apiConfig } from "@/config/api";
 ```
 
 ## Next Recommended Steps
 
 1. **Integrate with existing pages**
+
    - Update Home.tsx to use `useGetCategoriesAndFeaturedProducts`
    - Update Product.tsx to use `useGetProductBySlug`
    - Update Search.tsx to use `useSearchProductsByQuery`
 
 2. **Connect admin dashboard**
+
    - ProductForm.tsx → `useCreateProductMutation`
    - CategoryForm.tsx → `useCreateCategoryMutation`
    - Test CRUD operations
 
 3. **Add advanced features**
+
    - Filtering UI → `buildProductFilters` + `useGetProductsFiltered`
    - Pagination controls
    - Sort options
@@ -327,6 +337,7 @@ import { apiConfig } from '@/config/api';
 ## Summary
 
 ✅ **Complete React Query Implementation**
+
 - Environment-based API configuration (VITE_API_BASE_URL)
 - 30+ wrapper functions for all common operations
 - Type-safe filtering with `buildProductFilters`

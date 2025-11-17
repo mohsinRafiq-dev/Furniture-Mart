@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuthStore } from "../store/authStore";
@@ -10,35 +10,20 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { generateMockJWT, storeTokenInBoth } from "../utils/jwtUtils";
+import { apiClient } from "../services/api/client";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { setUser, setToken } = useAuthStore();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@furniture-mart.com");
+  const [password, setPassword] = useState("Admin@123456");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
-  const [tokenStorage, setTokenStorage] = useState<
-    "localStorage" | "cookie" | "both"
-  >("both");
-
-  // Demo credentials
-  const DEMO_ADMIN = {
-    email: "admin@ashraf.com",
-    password: "admin123",
-  };
-
-  // Pre-fill demo credentials for demo purposes
-  useEffect(() => {
-    setEmail(DEMO_ADMIN.email);
-    setPassword(DEMO_ADMIN.password);
-  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,58 +45,63 @@ const Login: React.FC = () => {
         return;
       }
 
-      // Demo authentication
-      if (email === DEMO_ADMIN.email && password === DEMO_ADMIN.password) {
+      // Call backend API for authentication
+      const response = await apiClient.post("/auth/login", {
+        email,
+        password,
+      });
+
+      if ((response.data as any).success) {
+        const { accessToken, refreshToken, admin } = (response.data as any)
+          .data;
+
+        // Store tokens in localStorage
+        localStorage.setItem("authToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        // Create user object
         const adminUser = {
-          id: "1",
-          email: DEMO_ADMIN.email,
-          name: "Admin User",
-          role: "admin" as const,
-          avatar:
-            "https://ui-avatars.com/api/?name=Admin+User&background=f59e0b&color=fff",
+          id: admin.id,
+          email: admin.email,
+          name: admin.name,
+          role: admin.role as "admin" | "editor" | "viewer",
+          avatar: `https://ui-avatars.com/api/?name=${admin.name}&background=f59e0b&color=fff`,
         };
-
-        // Generate mock JWT token
-        const token = generateMockJWT({
-          sub: "1",
-          email: DEMO_ADMIN.email,
-          name: "Admin User",
-          role: "admin",
-        });
-
-        // Store token based on selected method
-        if (rememberMe) {
-          switch (tokenStorage) {
-            case "localStorage":
-              localStorage.setItem("authToken", token);
-              break;
-            case "cookie":
-              document.cookie = `authToken=${token}; path=/; max-age=86400; SameSite=Strict`;
-              break;
-            case "both":
-              storeTokenInBoth(token, 86400);
-              break;
-          }
-        }
 
         // Update auth store
         setUser(adminUser);
-        setToken(token);
+        setToken(accessToken);
 
         // Show success message
-        setSuccess("✓ Login successful! Redirecting...");
+        setSuccess("✓ Login successful! Redirecting to dashboard...");
 
         // Redirect after short delay
         setTimeout(() => {
-          const from = location.state?.from?.pathname || "/admin/px9a-portal";
+          const from = location.state?.from?.pathname || "/admin/dashboard";
           navigate(from, { replace: true });
         }, 1000);
-      } else {
-        setError("Invalid credentials. Use admin@ashraf.com / admin123");
       }
-    } catch (err) {
-      setError("Login failed. Please try again.");
-      console.error(err);
+    } catch (err: any) {
+      console.error("[Login Error] Full error object:", err);
+
+      let errorMessage = "Network error. Please check your connection.";
+
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message === "Network Error") {
+        errorMessage =
+          "Network error. Backend server may not be running (http://localhost:5000)";
+      } else if (err.code === "ECONNREFUSED") {
+        errorMessage =
+          "Cannot connect to server. Is backend running on port 5000?";
+      } else if (err.code === "ENOTFOUND") {
+        errorMessage = "Cannot reach localhost:5000. Check your network.";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
+      console.error("Login error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -187,7 +177,7 @@ const Login: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
                 className="w-full bg-gray-900/50 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                placeholder="admin@ashraf.com"
+                placeholder="admin@furniture-mart.com"
                 required
               />
             </div>
@@ -224,65 +214,42 @@ const Login: React.FC = () => {
             </div>
           </div>
 
-          {/* Remember Me & Token Storage */}
-          <div className="space-y-3">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                disabled={isLoading}
-                className="w-4 h-4 rounded border-gray-700 bg-gray-900/50 text-amber-500 cursor-pointer disabled:opacity-50"
-              />
-              <span className="text-sm text-gray-300">
-                Remember me for 24 hours
-              </span>
-            </label>
+          {/* Remember Me */}
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              disabled={isLoading}
+              className="w-4 h-4 rounded border-gray-700 bg-gray-900/50 text-amber-500 cursor-pointer disabled:opacity-50"
+            />
+            <span className="text-sm text-gray-300">
+              Remember me for 24 hours
+            </span>
+          </label>
 
-            {rememberMe && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="bg-gray-900/50 border border-gray-700 rounded-lg p-3"
-              >
-                <label className="block text-xs font-medium text-gray-400 mb-2">
-                  Token Storage Method:
-                </label>
-                <select
-                  value={tokenStorage}
-                  onChange={(e) => setTokenStorage(e.target.value as any)}
-                  disabled={isLoading}
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors disabled:opacity-50"
-                >
-                  <option value="both">
-                    localStorage + Cookie (Recommended)
-                  </option>
-                  <option value="localStorage">localStorage Only</option>
-                  <option value="cookie">Cookie Only</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-2">
-                  💡 Tip: "Both" provides the best compatibility and security
-                </p>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Demo Credentials Hint */}
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
-            <p className="text-xs text-amber-600 font-medium mb-1">
-              🔐 Demo Credentials:
+          {/* Admin Credentials Info */}
+          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+            <p className="text-xs font-medium text-blue-400 mb-2">
+              📝 Admin Credentials:
             </p>
-            <p className="text-xs text-gray-300">
-              Email:{" "}
-              <code className="bg-gray-900/50 px-1 rounded">
-                admin@ashraf.com
-              </code>
-            </p>
-            <p className="text-xs text-gray-300">
-              Password:{" "}
-              <code className="bg-gray-900/50 px-1 rounded">admin123</code>
-            </p>
+            <div className="space-y-1">
+              <p className="text-xs text-gray-300">
+                <span className="text-blue-300 font-medium">Email:</span>{" "}
+                <code className="bg-gray-900/50 px-2 py-1 rounded text-blue-200">
+                  admin@furniture-mart.com
+                </code>
+              </p>
+              <p className="text-xs text-gray-300">
+                <span className="text-blue-300 font-medium">Password:</span>{" "}
+                <code className="bg-gray-900/50 px-2 py-1 rounded text-blue-200">
+                  Admin@123456
+                </code>
+              </p>
+              <p className="text-xs text-blue-300 mt-2">
+                💡 Or try: editor@furniture-mart.com (Editor@123456)
+              </p>
+            </div>
           </div>
 
           {/* Submit Button */}

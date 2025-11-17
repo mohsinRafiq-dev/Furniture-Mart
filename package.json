@@ -16,7 +16,9 @@
     "lucide-react": "^0.553.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^5.5.3",
     "react-hook-form": "^7.66.0",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^6.16.0",
     "zustand": "^4.5.7"
   },
