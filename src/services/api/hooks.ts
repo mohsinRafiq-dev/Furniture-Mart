@@ -42,6 +42,17 @@ export const useProducts = (params?: PaginationParams) => {
   });
 };
 
+export const useProductsAdvanced = (params?: any) => {
+  return useQuery({
+    queryKey: ["products", "advanced", params],
+    queryFn: async () => {
+      const response = await productApi.getAdvanced(params);
+      return response.data.data;
+    },
+    enabled: !!params,
+  });
+};
+
 export const useProduct = (slug: string, enabled = true) => {
   return useQuery({
     queryKey: ["product", slug],

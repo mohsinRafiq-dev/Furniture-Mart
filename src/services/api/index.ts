@@ -21,6 +21,7 @@ export type {
 
 // API endpoints
 export { productApi } from "./productApi";
+export type { AdvancedProductParams } from "./productApi";
 export { categoryApi } from "./categoryApi";
 export { orderApi } from "./orderApi";
 export type { CreateOrderInput, UpdateOrderStatusInput } from "./orderApi";
@@ -31,6 +32,7 @@ export { queryClient } from "./hooks";
 // Product hooks
 export {
   useProducts,
+  useProductsAdvanced,
   useProduct,
   useProductById,
   useCreateProduct,
@@ -59,3 +61,28 @@ export {
   useCancelOrder,
   useDeleteOrder,
 } from "./hooks";
+
+// Query Service - Wrapper functions
+export {
+  useGetProducts,
+  useGetProductsFiltered,
+  useGetProductBySlug,
+  useGetProductById,
+  useSearchProductsByQuery,
+  buildProductFilters,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useBulkDeleteProductsMutation,
+  useGetCategories,
+  useGetCategoryBySlug,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+  useGetMyOrders,
+  useCreateOrderMutation,
+  useGetCategoriesAndFeaturedProducts,
+  queryKeys,
+  prefetchProductBySlug,
+  prefetchCategories,
+} from "./queryService";

@@ -8,19 +8,34 @@ import {
   ApiResponse,
 } from "./types";
 
+export interface AdvancedProductParams extends PaginationParams {
+  search?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  featured?: boolean;
+  rating?: number;
+  inStock?: boolean;
+  sort?: string;
+}
+
 // Product Endpoints
 export const productApi = {
   // Get all products
   getAll: (params?: PaginationParams) =>
     apiClient.get<ApiResponse<ProductsResponse>>("/products", { params }),
 
+  // Get products with advanced filtering
+  getAdvanced: (params?: AdvancedProductParams) =>
+    apiClient.get<ApiResponse<ProductsResponse>>("/products/search/advanced", { params }),
+
   // Get single product by slug
   getBySlug: (slug: string) =>
-    apiClient.get<ApiResponse<Product>>(`/products/${slug}`),
+    apiClient.get<ApiResponse<Product>>(`/products/slug/${slug}`),
 
   // Get single product by ID
   getById: (id: string) =>
-    apiClient.get<ApiResponse<Product>>(`/products/id/${id}`),
+    apiClient.get<ApiResponse<Product>>(`/products/${id}`),
 
   // Create product (admin)
   create: (data: CreateProductInput) =>
