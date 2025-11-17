@@ -95,8 +95,9 @@ const AdminDashboard: React.FC = () => {
 
       // The axios response structure is: { data: { success, message, data: { products/categories, pagination } } }
       // So productsRes.data is the API response body
-      const apiProductsData = productsRes.data?.data?.products || [];
-      const apiCategoriesData = categoriesRes.data?.data?.categories || [];
+      const apiProductsData = (productsRes as any).data?.data?.products || [];
+      const apiCategoriesData =
+        (categoriesRes as any).data?.data?.categories || [];
 
       console.log("Extracted Products:", apiProductsData);
       console.log("Extracted Categories:", apiCategoriesData);
@@ -204,7 +205,7 @@ const AdminDashboard: React.FC = () => {
 
       // POST returns: { success, message, data: { categoryObject } }
       // GET returns: { success, message, data: { categories: [...], pagination: {...} } }
-      const addedCategory = response.data?.data;
+      const addedCategory = (response as any).data?.data;
 
       if (addedCategory) {
         setCategories([...categories, addedCategory]);
@@ -310,7 +311,7 @@ const AdminDashboard: React.FC = () => {
 
       console.log("Category updated response:", response.data);
 
-      const updatedCategory = response.data?.data;
+      const updatedCategory = (response as any).data?.data;
 
       if (updatedCategory) {
         setCategories(
