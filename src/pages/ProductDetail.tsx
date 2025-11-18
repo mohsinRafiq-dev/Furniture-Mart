@@ -30,6 +30,10 @@ export default function ProductDetail() {
 
   useEffect(() => {
     fetchProduct();
+    // Enable scrolling when component mounts
+    document.documentElement.style.overflow = "auto";
+    document.body.style.overflow = "auto";
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [productId]);
 
   const fetchProduct = async () => {
@@ -123,7 +127,7 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-amber-50/30 to-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-white via-amber-50/30 to-white overflow-auto">
       {/* Header with Back Button */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

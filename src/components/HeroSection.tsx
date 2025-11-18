@@ -10,6 +10,10 @@ import {
   Search,
 } from "lucide-react";
 
+interface HeroSectionProps {
+  animationsReady?: boolean;
+}
+
 const BACKGROUND_IMAGES = [
   "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&h=600&fit=crop",
   "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=1200&h=600&fit=crop",
@@ -96,7 +100,7 @@ const badgeVariants = {
   },
 };
 
-const HeroSection = () => {
+const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -115,10 +119,10 @@ const HeroSection = () => {
 
   return (
     <div className="relative w-full h-screen min-h-screen flex items-center justify-center overflow-hidden bg-gray-900">
-      {/* Animated Background Images */}
-      <AnimatePresence mode="wait">
+      {/* Animated Background Images - Always animate, independent of content */}
+      <AnimatePresence mode="wait" key="bg-carousel">
         <motion.div
-          key={currentImageIndex}
+          key={`bg-${currentImageIndex}`}
           variants={backgroundVariants}
           initial="enter"
           animate="center"
@@ -180,7 +184,7 @@ const HeroSection = () => {
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
+        animate={animationsReady ? "visible" : "hidden"}
         className="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto"
       >
         {/* Top Badge */}
@@ -198,7 +202,7 @@ const HeroSection = () => {
           <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold text-white mb-4 leading-tight">
             Transform Your
             <motion.span
-              className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600"
+              className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 pb-[10px]"
               animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
               transition={{ duration: 3, repeat: Infinity }}
               style={{ backgroundSize: "200% 200%" }}

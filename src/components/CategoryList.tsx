@@ -13,6 +13,7 @@ interface Category {
 interface CategoryListProps {
   categories?: Category[];
   isLoading?: boolean;
+  animationsReady?: boolean;
 }
 
 const DEFAULT_CATEGORIES: Category[] = [
@@ -95,7 +96,7 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, x: 20, scale: 0.95 },
+  hidden: { opacity: 0, x: 100, scale: 0.95 },
   visible: {
     opacity: 1,
     x: 0,
@@ -126,7 +127,12 @@ const skeletonVariants = {
   },
 };
 
-const CategoryCard = ({ category }: { category: Category }) => {
+interface CategoryCardProps {
+  category: Category;
+  index?: number;
+}
+
+const CategoryCard = ({ category, index = 0 }: CategoryCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -139,8 +145,13 @@ const CategoryCard = ({ category }: { category: Category }) => {
         variants={itemVariants}
         initial="hidden"
         whileInView="visible"
-        whileHover={{ y: -16, scale: 1.08 }}
         viewport={{ once: false, margin: "-50px" }}
+        transition={{
+          duration: 0.6,
+          delay: index * 0.08,
+          ease: "easeOut",
+        }}
+        whileHover={{ y: -16, scale: 1.08 }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="flex-shrink-0 w-56 h-72 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all cursor-pointer bg-gradient-to-br from-white to-gray-50/80 border border-amber-100/50 snap-center"
@@ -276,6 +287,7 @@ const CategorySkeleton = () => (
 const CategoryList = ({
   categories = DEFAULT_CATEGORIES,
   isLoading = false,
+  animationsReady = true,
 }: CategoryListProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -309,8 +321,7 @@ const CategoryList = ({
     <motion.section
       variants={containerVariants}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
+      animate={animationsReady ? "visible" : "hidden"}
       className="relative w-full py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 overflow-hidden"
     >
       {/* Premium Animated Background Decorations */}
@@ -486,10 +497,17 @@ const CategoryList = ({
           {/* Scroll Buttons */}
           <div className="hidden md:flex gap-3">
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{
+                scale: 1.15,
+                boxShadow: "0 10px 30px rgba(217,119,6,0.3)",
+              }}
+              whileTap={{ scale: 0.85 }}
               onClick={() => scroll("left")}
               disabled={!canScrollLeft}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              viewport={{ once: true }}
               className="group relative p-3 rounded-full bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-500 hover:text-amber-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
             >
               <svg
@@ -507,10 +525,17 @@ const CategoryList = ({
               </svg>
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{
+                scale: 1.15,
+                boxShadow: "0 10px 30px rgba(217,119,6,0.3)",
+              }}
+              whileTap={{ scale: 0.85 }}
               onClick={() => scroll("right")}
               disabled={!canScrollRight}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              viewport={{ once: true }}
               className="group relative p-3 rounded-full bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-500 hover:text-amber-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
             >
               <svg
@@ -534,9 +559,10 @@ const CategoryList = ({
         <motion.div
           ref={scrollContainerRef}
           onScroll={handleScroll}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           className="flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory"
           style={{ scrollBehavior: "smooth" }}
         >
@@ -544,8 +570,12 @@ const CategoryList = ({
             ? Array.from({ length: 6 }).map((_, index) => (
                 <CategorySkeleton key={index} />
               ))
-            : categories.map((category) => (
-                <CategoryCard key={category.id} category={category} />
+            : categories.map((category, index) => (
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  index={index}
+                />
               ))}
         </motion.div>
 

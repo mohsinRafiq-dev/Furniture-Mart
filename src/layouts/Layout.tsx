@@ -172,10 +172,10 @@ function Header({
               Home
             </Link>
             <Link
-              to="/about"
+              to="/products"
               className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
             >
-              About
+              Products
             </Link>
             <Link
               to="/categories"
@@ -188,6 +188,12 @@ function Header({
               className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
             >
               Search
+            </Link>
+            <Link
+              to="/about"
+              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
+            >
+              About
             </Link>
           </div>
 
@@ -259,11 +265,11 @@ function Header({
               Home
             </Link>
             <Link
-              to="/about"
+              to="/products"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
               onClick={() => setMobileMenuOpen(false)}
             >
-              About
+              Products
             </Link>
             <Link
               to="/categories"
@@ -278,6 +284,13 @@ function Header({
               onClick={() => setMobileMenuOpen(false)}
             >
               Search
+            </Link>
+            <Link
+              to="/about"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About
             </Link>
           </div>
         )}
@@ -392,6 +405,15 @@ function Footer() {
               </li>
               <li>
                 <Link
+                  to="/products"
+                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  Products
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/categories"
                   className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
                 >
@@ -401,20 +423,29 @@ function Footer() {
               </li>
               <li>
                 <Link
-                  to="/cart"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  Cart
-                </Link>
-              </li>
-              <li>
-                <Link
                   to="/search"
                   className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                   Search
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/cart"
+                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  Cart
                 </Link>
               </li>
             </ul>

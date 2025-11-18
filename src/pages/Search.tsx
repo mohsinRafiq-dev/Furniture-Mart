@@ -1,116 +1,147 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import SearchInput, { MOCK_SUGGESTIONS } from "../components/SearchInput";
+import SearchInput from "../components/SearchInput";
 import ProductGrid, { Product } from "../components/ProductGrid";
+import { Filter, ChevronRight, Sparkles, X } from "lucide-react";
+import { apiClient } from "../services/api/client";
 
-// Mock API fetch function - Replace with actual API calls
-const fetchSearchResults = async (query: string): Promise<Product[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
+interface SearchSuggestion {
+  id: string;
+  text: string;
+  type: "product" | "category";
+  icon?: string;
+  image?: string;
+}
 
-  // Mock results based on query
-  const allProducts: Product[] = [
-    {
-      id: "1",
-      name: "Modern Leather Sofa",
-      price: 899,
-      originalPrice: 1299,
-      image:
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&h=400&fit=crop",
-      rating: 4.8,
-      reviewCount: 324,
-      inStock: true,
-    },
-    {
-      id: "2",
-      name: "Minimalist Dining Table",
-      price: 599,
-      originalPrice: 799,
-      image:
-        "https://images.unsplash.com/photo-1559707264-cd4628902d4a?w=500&h=400&fit=crop",
-      rating: 4.6,
-      reviewCount: 156,
-      inStock: true,
-    },
-    {
-      id: "3",
-      name: "Rustic Wooden Desk",
-      price: 449,
-      image:
-        "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&h=400&fit=crop",
-      rating: 4.7,
-      reviewCount: 89,
-      inStock: true,
-    },
-    {
-      id: "4",
-      name: "Luxury Bed Frame",
-      price: 1299,
-      originalPrice: 1699,
-      image:
-        "https://images.unsplash.com/photo-1540932239986-310128078ceb?w=500&h=400&fit=crop",
-      rating: 4.9,
-      reviewCount: 512,
-      inStock: true,
-    },
-    {
-      id: "5",
-      name: "Contemporary Armchair",
-      price: 549,
-      image:
-        "https://images.unsplash.com/photo-1592078615290-033ee584e267?w=500&h=400&fit=crop",
-      rating: 4.5,
-      reviewCount: 203,
-      inStock: false,
-    },
-    {
-      id: "6",
-      name: "Industrial Bookshelf",
-      price: 399,
-      image:
-        "https://images.unsplash.com/photo-1572496750584-5020b9d1e18d?w=500&h=400&fit=crop",
-      rating: 4.4,
-      reviewCount: 134,
-      inStock: true,
-    },
-    {
-      id: "7",
-      name: "Scandinavian Coffee Table",
-      price: 349,
-      originalPrice: 449,
-      image:
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&h=400&fit=crop",
-      rating: 4.7,
-      reviewCount: 278,
-      inStock: true,
-    },
-    {
-      id: "8",
-      name: "Premium Office Chair",
-      price: 699,
-      image:
-        "https://images.unsplash.com/photo-1574180273156-78191ba9b88f?w=500&h=400&fit=crop",
-      rating: 4.6,
-      reviewCount: 445,
-      inStock: true,
-    },
-  ];
+// Fetch search results with advanced filtering
+const fetchSearchResults = async (
+  query: string,
+  category?: string,
+  minPrice?: number,
+  maxPrice?: number,
+  sortBy?: string
+): Promise<Product[]> => {
+  try {
+    const params: any = {
+      limit: 100,
+    };
 
-  if (!query.trim()) {
-    return allProducts;
+    // Use category filter if provided (from clicking category card)
+    if (category && category.trim()) {
+      params.category = category;
+    } else if (query && query.trim()) {
+      // Use text search if provided
+      params.search = query;
+    } else {
+      return [];
+    }
+
+    // Add price filters
+    if (minPrice !== undefined) params.minPrice = minPrice;
+    if (maxPrice !== undefined) params.maxPrice = maxPrice;
+
+    // Add sorting
+    if (sortBy) params.sort = sortBy;
+
+    const response = await apiClient.get<any>("/products/search/advanced", {
+      params,
+    });
+
+    const products = response.data?.data?.products || [];
+
+    // Transform API products to match Product interface
+    return Array.isArray(products)
+      ? products.map((product: any) => ({
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          originalPrice: product.originalPrice,
+          image:
+            product.images?.[0] ||
+            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&h=400&fit=crop",
+          rating: product.rating || 4.5,
+          reviewCount: product.reviews?.length || 0,
+          inStock: product.inStock !== false,
+        }))
+      : [];
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    return [];
   }
+};
 
-  const lowerQuery = query.toLowerCase();
-  return allProducts.filter(
-    (product) =>
-      product.name.toLowerCase().includes(lowerQuery) ||
-      product.id.toLowerCase().includes(lowerQuery)
-  );
+// Fetch categories from API
+const fetchCategories = async () => {
+  try {
+    const response = await apiClient.get<any>("/categories");
+    const categories = response.data?.data?.categories || [];
+    return Array.isArray(categories) ? categories : [];
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+};
+
+// Fetch suggestions (categories + featured products)
+const fetchSuggestions = async (): Promise<SearchSuggestion[]> => {
+  try {
+    const [categoriesRes, productsRes] = await Promise.all([
+      apiClient.get<any>("/categories"),
+      apiClient.get<any>("/products/search/advanced", {
+        params: { featured: "true", limit: 6 },
+      }),
+    ]);
+
+    const suggestions: SearchSuggestion[] = [];
+
+    // Add categories as suggestions
+    const categories = categoriesRes.data?.data?.categories || [];
+    if (Array.isArray(categories)) {
+      categories.slice(0, 5).forEach((cat: any) => {
+        suggestions.push({
+          id: `cat-${cat._id}`,
+          text: cat.name,
+          type: "category",
+          image:
+            cat.image ||
+            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=200&fit=crop",
+        });
+      });
+    }
+
+    // Add featured products as suggestions
+    const products = productsRes.data?.data?.products || [];
+    if (Array.isArray(products)) {
+      products.slice(0, 5).forEach((prod: any) => {
+        suggestions.push({
+          id: `prod-${prod._id}`,
+          text: prod.name,
+          type: "product",
+          image:
+            prod.images?.[0] ||
+            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=200&fit=crop",
+        });
+      });
+    }
+
+    return suggestions.length > 0
+      ? suggestions
+      : [{ id: "1", text: "Loading suggestions...", type: "product" as const }];
+  } catch (error) {
+    console.error("Error fetching suggestions:", error);
+    return [];
+  }
 };
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<number | undefined>();
+  const [maxPrice, setMaxPrice] = useState<number | undefined>();
+  const [sortBy, setSortBy] = useState<string>("newest");
+  const [showFilters, setShowFilters] = useState(false);
 
   // Debounce search query
   useMemo(() => {
@@ -128,15 +159,63 @@ export default function Search() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["search", debouncedQuery],
-    queryFn: () => fetchSearchResults(debouncedQuery),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    enabled: debouncedQuery.length > 0, // Only fetch when there's a query
+    queryKey: [
+      "search",
+      debouncedQuery,
+      selectedCategory,
+      minPrice,
+      maxPrice,
+      sortBy,
+    ],
+    queryFn: () =>
+      fetchSearchResults(
+        debouncedQuery,
+        selectedCategory,
+        minPrice,
+        maxPrice,
+        sortBy
+      ),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    enabled: debouncedQuery.length > 0 || selectedCategory.length > 0,
   });
+
+  // React Query for fetching categories
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  // React Query for fetching suggestions
+  const { data: suggestions = [] } = useQuery({
+    queryKey: ["suggestions"],
+    queryFn: fetchSuggestions,
+    staleTime: 15 * 60 * 1000, // 15 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+  });
+
+  // Restore scroll position when component mounts and enable scrolling
+  useEffect(() => {
+    // Enable scrolling
+    document.documentElement.style.overflow = "auto";
+    document.body.style.overflow = "auto";
+
+    // Scroll to top on page mount/navigation back
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    setSelectedCategory(""); // Clear category filter when doing text search
+  };
+
+  const handleCategoryClick = (categoryName: string) => {
+    setSearchQuery(""); // Clear text search
+    setSelectedCategory(categoryName); // Set category filter
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSuggestionSelect = (suggestion: {
@@ -144,137 +223,524 @@ export default function Search() {
     text: string;
   }) => {
     setSearchQuery(suggestion.text);
+    setSelectedCategory("");
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setDebouncedQuery("");
+    setSelectedCategory("");
+    setMinPrice(undefined);
+    setMaxPrice(undefined);
+    setSortBy("newest");
   };
 
   const resultCount = results.length;
+  const hasActiveFilters =
+    searchQuery || selectedCategory || minPrice || maxPrice;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50/50 via-white to-orange-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Find Your Perfect Furniture
-          </h1>
-          <p className="text-xl text-gray-600">
-            Search through our extensive collection of quality furniture and
-            home decor
-          </p>
-        </div>
+        {/* Animated Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12 text-center"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="flex items-center justify-center gap-2 mb-4"
+          >
+            <Sparkles className="w-5 h-5 text-amber-500" />
+            <span className="text-sm font-semibold text-amber-600 uppercase tracking-widest">
+              Find Your Perfect Match
+            </span>
+            <Sparkles className="w-5 h-5 text-amber-500" />
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight"
+          >
+            Discover Your Ideal
+            <motion.span
+              className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600"
+              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              style={{ backgroundSize: "200% 200%" }}
+            >
+              Furniture & Decor
+            </motion.span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-xl text-gray-600 max-w-2xl mx-auto"
+          >
+            Explore our extensive collection of premium furniture and home decor
+            pieces
+          </motion.p>
+        </motion.div>
 
         {/* Search Input */}
-        <div className="mb-12">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="mb-12"
+        >
           <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
+            value={searchQuery || selectedCategory}
+            onChange={(value) => {
+              setSearchQuery(value);
+              setSelectedCategory(""); // Clear category filter when user types
+            }}
             onSearch={handleSearch}
-            suggestions={MOCK_SUGGESTIONS}
+            suggestions={suggestions}
             isLoading={isLoading}
             onSuggestionSelect={handleSuggestionSelect}
           />
-        </div>
+        </motion.div>
 
-        {/* Results Info */}
-        {searchQuery && (
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-lg text-gray-700">
-                {isLoading ? (
-                  <span className="flex items-center gap-2">
-                    <span className="inline-block animate-spin">⟳</span>
-                    Searching...
-                  </span>
-                ) : isError ? (
-                  <span className="text-red-600">Error loading results</span>
-                ) : resultCount === 0 ? (
-                  <span className="text-gray-600">
-                    No products found matching "{searchQuery}"
-                  </span>
-                ) : (
-                  <span>
-                    Found{" "}
-                    <span className="font-bold text-amber-600">
-                      {resultCount}
-                    </span>{" "}
-                    product
-                    {resultCount !== 1 ? "s" : ""} for "{searchQuery}"
-                  </span>
-                )}
-              </p>
-            </div>
+        {/* Advanced Filters Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-8"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-amber-200 rounded-lg hover:border-amber-500 transition-all"
+            >
+              <Filter className="w-4 h-4 text-amber-600" />
+              <span className="font-semibold text-gray-700">Filters</span>
+              {hasActiveFilters && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="inline-flex items-center justify-center w-5 h-5 bg-amber-500 text-white text-xs font-bold rounded-full"
+                >
+                  {
+                    [selectedCategory, minPrice, maxPrice].filter(Boolean)
+                      .length
+                  }
+                </motion.span>
+              )}
+            </button>
 
-            {/* Sort/Filter Options (Placeholder) */}
-            {resultCount > 0 && (
-              <div className="mt-4 sm:mt-0 flex gap-3">
-                <select className="px-4 py-2 border border-gray-300 rounded-lg bg-white hover:border-gray-400 focus:outline-none focus:border-amber-500 cursor-pointer">
-                  <option value="">Sort by</option>
-                  <option value="relevance">Relevance</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="newest">Newest</option>
-                </select>
-              </div>
+            {hasActiveFilters && (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={clearFilters}
+                className="flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium"
+              >
+                <X className="w-4 h-4" />
+                Clear filters
+              </motion.button>
             )}
           </div>
+
+          {/* Filters Panel */}
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{
+              opacity: showFilters ? 1 : 0,
+              height: showFilters ? "auto" : 0,
+            }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="bg-white p-6 rounded-lg border-2 border-amber-100 grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+              {/* Category Filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setSearchQuery("");
+                  }}
+                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                >
+                  <option value="">All Categories</option>
+                  {categories.map((cat: any) => (
+                    <option key={cat._id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Min Price */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Min Price ($)
+                </label>
+                <input
+                  type="number"
+                  value={minPrice ?? ""}
+                  onChange={(e) =>
+                    setMinPrice(
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
+                  placeholder="0"
+                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              {/* Max Price */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Max Price ($)
+                </label>
+                <input
+                  type="number"
+                  value={maxPrice ?? ""}
+                  onChange={(e) =>
+                    setMaxPrice(
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
+                  placeholder="10000"
+                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              {/* Sort By */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Sort By
+                </label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                >
+                  <option value="newest">Newest</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="popular">Most Popular</option>
+                </select>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Results Info - Animated */}
+        {(searchQuery || selectedCategory) && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mb-8"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+              <div>
+                {isLoading ? (
+                  <motion.div
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                    <p className="text-lg text-gray-700 font-medium">
+                      Searching...
+                    </p>
+                  </motion.div>
+                ) : isError ? (
+                  <p className="text-red-600 font-medium">
+                    Error loading results
+                  </p>
+                ) : resultCount === 0 ? (
+                  <p className="text-gray-600">
+                    No products found
+                    {selectedCategory && (
+                      <>
+                        {" "}
+                        in{" "}
+                        <span className="font-bold text-gray-900">
+                          {selectedCategory}
+                        </span>
+                      </>
+                    )}
+                    {searchQuery && (
+                      <>
+                        {" "}
+                        matching{" "}
+                        <span className="font-bold text-gray-900">
+                          "{searchQuery}"
+                        </span>
+                      </>
+                    )}
+                  </p>
+                ) : (
+                  <p className="text-gray-700">
+                    Found{" "}
+                    <span className="font-bold text-amber-600 text-lg">
+                      {resultCount}
+                    </span>{" "}
+                    <span className="font-medium">
+                      product{resultCount !== 1 ? "s" : ""}
+                    </span>
+                    {selectedCategory && (
+                      <>
+                        {" "}
+                        in <span className="font-bold">{selectedCategory}</span>
+                      </>
+                    )}
+                    {searchQuery && (
+                      <>
+                        {" "}
+                        matching{" "}
+                        <span className="font-bold">"{searchQuery}"</span>
+                      </>
+                    )}
+                  </p>
+                )}
+              </div>
+            </div>
+          </motion.div>
         )}
 
-        {/* Results Grid */}
-        <div>
-          {searchQuery && isLoading ? (
+        {/* Results Grid - Animated */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          {(searchQuery || selectedCategory) && isLoading ? (
             <ProductGrid products={[]} isLoading={true} columns={4} />
-          ) : searchQuery && isError ? (
-            <div className="text-center py-16">
-              <p className="text-xl text-red-600 mb-4">
+          ) : (searchQuery || selectedCategory) && isError ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-16"
+            >
+              <p className="text-xl text-red-600 mb-4 font-medium">
                 Error loading search results
               </p>
               <p className="text-gray-600">{error?.message}</p>
-            </div>
-          ) : searchQuery && resultCount > 0 ? (
-            <ProductGrid
-              products={results}
-              columns={4}
-              onProductClick={(productId) => {
-                console.log("Clicked product:", productId);
-              }}
-            />
-          ) : searchQuery ? (
-            <div className="text-center py-16">
-              <p className="text-2xl text-gray-400 mb-4">🔍</p>
-              <p className="text-xl text-gray-600 mb-2">No products found</p>
-              <p className="text-gray-500">Try adjusting your search terms</p>
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <p className="text-2xl text-gray-400 mb-4">🛋️</p>
-              <p className="text-xl text-gray-600 mb-2">Start searching</p>
-              <p className="text-gray-500">
-                Type in the search box above to find furniture
+            </motion.div>
+          ) : (searchQuery || selectedCategory) && resultCount > 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <ProductGrid
+                products={results}
+                columns={4}
+                onProductClick={(productId) => {
+                  console.log("Clicked product:", productId);
+                }}
+              />
+            </motion.div>
+          ) : searchQuery || selectedCategory ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20"
+            >
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-5xl mb-4"
+              >
+                🔍
+              </motion.div>
+              <p className="text-2xl text-gray-700 mb-2 font-semibold">
+                No products found
               </p>
-            </div>
+              <p className="text-gray-600">
+                Try adjusting your search terms or browse categories
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20"
+            >
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-5xl mb-4"
+              >
+                🛋️
+              </motion.div>
+              <p className="text-2xl text-gray-700 mb-2 font-semibold">
+                Start Your Search
+              </p>
+              <p className="text-gray-600">
+                Type in the search box above to find your perfect furniture
+              </p>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
 
-        {/* Featured Categories (When no search) */}
+        {/* Featured Categories - Animated */}
         {!searchQuery && !isLoading && (
-          <div className="mt-16 pt-12 border-t border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Browse by Category
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {["Living Room", "Bedroom", "Kitchen", "Office"].map(
-                (category) => (
-                  <button
-                    key={category}
-                    onClick={() => handleSearch(category)}
-                    className="p-4 bg-white border-2 border-gray-200 rounded-lg hover:border-amber-500 hover:shadow-md transition-all font-medium text-gray-900"
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="mt-20 pt-16 border-t-2 border-amber-100"
+          >
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex items-center gap-3 mb-12"
+            >
+              <motion.div
+                animate={{ rotate: [0, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Filter className="w-6 h-6 text-amber-500" />
+              </motion.div>
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                Browse by Category
+              </h2>
+            </motion.div>
+
+            {categoriesLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="text-amber-500"
+                >
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    {category}
-                  </button>
-                )
-              )}
-            </div>
-          </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                </motion.div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {categories.map((category: any, index: number) => (
+                  <motion.div
+                    key={category._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="group cursor-pointer"
+                    onClick={() => handleCategoryClick(category.name)}
+                  >
+                    <motion.div
+                      whileHover={{
+                        y: -8,
+                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+                      }}
+                      className="relative bg-white rounded-3xl overflow-hidden border border-amber-100/50 shadow-xl transition-all duration-300 h-full flex flex-col"
+                    >
+                      {/* Top Accent Line */}
+                      <div className="h-1 w-1/3 bg-gradient-to-r from-amber-400 to-orange-400" />
+
+                      {/* Image Container */}
+                      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
+                        {category.image ? (
+                          <motion.img
+                            src={category.image}
+                            alt={category.name}
+                            className="w-full h-full object-cover"
+                            whileHover={{ scale: 1.2 }}
+                            transition={{ duration: 0.6 }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-6xl">
+                            🛋️
+                          </div>
+                        )}
+
+                        {/* Blur Overlay - Appears on Hover */}
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileHover={{ opacity: 1 }}
+                          className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center transition-all duration-300"
+                        >
+                          <div className="text-center">
+                            <p className="text-white font-semibold mb-3">
+                              Explore
+                            </p>
+                            <motion.div
+                              animate={{ x: [0, 4, 0] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                            >
+                              <ChevronRight className="w-6 h-6 text-white mx-auto" />
+                            </motion.div>
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      {/* Content Section */}
+                      <div className="px-6 py-5 flex-1 flex flex-col justify-between">
+                        <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2">
+                          {category.name}
+                        </h3>
+
+                        {/* Product Count Badge */}
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.2 + index * 0.1 }}
+                          className="inline-flex items-center justify-center bg-gradient-to-r from-amber-100/80 to-orange-100/80 text-amber-700 font-semibold text-sm px-4 py-2 rounded-full w-fit"
+                        >
+                          <motion.span
+                            key={category.productCount}
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            {category.productCount || 0}
+                          </motion.span>
+                          <span className="ml-1">items</span>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Call to Action Text */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              className="text-center mt-12"
+            >
+              <p className="text-gray-600 text-base">
+                Can't find what you're looking for?{" "}
+                <span className="font-semibold text-amber-600 cursor-pointer hover:text-amber-700 transition-colors">
+                  Contact our team
+                </span>
+              </p>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </div>

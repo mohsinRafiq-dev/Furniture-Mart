@@ -6,6 +6,7 @@ interface SearchSuggestion {
   text: string;
   type: "product" | "category";
   icon?: string;
+  image?: string;
 }
 
 interface SearchInputProps {
@@ -133,10 +134,15 @@ const SearchInput = ({
   }, []);
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-3xl mx-auto">
       {/* Search Input */}
-      <div className="relative">
-        <input
+      <motion.div
+        className="relative"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.input
           ref={inputRef}
           type="text"
           value={value}
@@ -148,16 +154,22 @@ const SearchInput = ({
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search furniture, decor, and more..."
-          className="w-full px-5 py-3 pl-12 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-amber-500 transition-colors bg-white"
+          whileFocus={{ scale: 1.02 }}
+          transition={{ duration: 0.2 }}
+          className="w-full px-6 py-4 pl-14 text-lg border-2 border-gray-300 rounded-xl focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all bg-white shadow-sm hover:shadow-md"
         />
 
-        {/* Search Icon */}
+        {/* Search Icon with Pulse */}
         <motion.div
-          className="absolute left-3 top-4 text-gray-400 flex items-center justify-center pointer-events-none"
-          animate={{ scale: value ? 1.1 : 1 }}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center justify-center pointer-events-none"
+          animate={{
+            scale: value ? 1.15 : 1,
+            color: value ? "#d97706" : "#9ca3af",
+          }}
+          transition={{ duration: 0.3 }}
         >
           <svg
-            className="w-5 h-5"
+            className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -175,14 +187,16 @@ const SearchInput = ({
         <AnimatePresence>
           {value && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              whileHover={{ scale: 1.1, color: "#dc2626" }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 onChange("");
                 setIsOpen(false);
               }}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-600 transition-colors"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path
@@ -203,7 +217,7 @@ const SearchInput = ({
             className="absolute right-4 top-1/2 transform -translate-y-1/2 text-amber-500"
           >
             <svg
-              className="w-5 h-5"
+              className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -217,7 +231,7 @@ const SearchInput = ({
             </svg>
           </motion.div>
         )}
-      </div>
+      </motion.div>
 
       {/* Suggestions Dropdown */}
       <AnimatePresence>
@@ -228,35 +242,62 @@ const SearchInput = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-2xl z-50 overflow-hidden max-h-96 overflow-y-auto"
+            className="absolute top-full left-0 right-0 mt-3 bg-white border-2 border-amber-100 rounded-xl shadow-2xl z-50 overflow-hidden max-h-96 overflow-y-auto backdrop-blur-sm"
           >
             {filteredSuggestions.map((suggestion, index) => (
               <motion.button
                 key={suggestion.id}
                 variants={itemVariants}
                 onClick={() => handleSelectSuggestion(suggestion)}
-                className={`w-full px-5 py-3 text-left flex items-center gap-3 transition-all ${
+                whileHover={{
+                  backgroundColor: "rgba(217, 119, 6, 0.05)",
+                  x: 4,
+                }}
+                className={`w-full px-6 py-4 text-left flex items-center gap-4 transition-all ${
                   index === highlightedIndex
-                    ? "bg-amber-50 border-l-4 border-amber-500"
-                    : "hover:bg-gray-50"
+                    ? "bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-500"
+                    : ""
                 } ${
                   index !== filteredSuggestions.length - 1
                     ? "border-b border-gray-100"
                     : ""
                 }`}
               >
-                <span className="text-xl flex-shrink-0">
-                  {suggestion.icon || "🔍"}
-                </span>
+                {suggestion.image ? (
+                  <motion.img
+                    src={suggestion.image}
+                    alt={suggestion.text}
+                    className="w-12 h-12 rounded-lg object-cover flex-shrink-0 border border-amber-200"
+                    animate={
+                      index === highlightedIndex ? { scale: 1.1 } : { scale: 1 }
+                    }
+                  />
+                ) : (
+                  <motion.span
+                    className="text-2xl flex-shrink-0"
+                    animate={
+                      index === highlightedIndex ? { scale: 1.2 } : { scale: 1 }
+                    }
+                  >
+                    {suggestion.icon || "🔍"}
+                  </motion.span>
+                )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">
+                  <p className="font-semibold text-gray-900 truncate text-base">
                     {suggestion.text}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    {suggestion.type === "category" ? "Category" : "Product"}
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                    {suggestion.type === "category"
+                      ? "📁 Category"
+                      : "📦 Product"}
                   </p>
                 </div>
-                <span className="text-gray-400 text-sm flex-shrink-0">→</span>
+                <motion.span
+                  className="text-amber-500 text-lg flex-shrink-0 font-bold"
+                  animate={index === highlightedIndex ? { x: 4 } : { x: 0 }}
+                >
+                  →
+                </motion.span>
               </motion.button>
             ))}
           </motion.div>

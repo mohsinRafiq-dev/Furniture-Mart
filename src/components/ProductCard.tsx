@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
-import { Badge } from "./ui/Badge";
 import { useCartStore } from "../store";
+import { Eye, ShoppingCart } from "lucide-react";
 
 interface ProductCardProps {
   id: string;
@@ -15,6 +16,8 @@ interface ProductCardProps {
   inStock: boolean;
   onAddToCart?: (productId: string) => void;
   onClick?: () => void;
+  product?: any; // Full product object for quick view
+  onQuickView?: (product: any) => void; // Callback for quick view
 }
 
 const ProductCard = ({
@@ -28,7 +31,10 @@ const ProductCard = ({
   inStock,
   onAddToCart,
   onClick,
+  product,
+  onQuickView,
 }: ProductCardProps) => {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const addToCart = useCartStore((state) => state.addItem);
@@ -90,85 +96,92 @@ const ProductCard = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -4 }}
+    <div
       onClick={onClick}
-      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow cursor-pointer h-full flex flex-col"
+      className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer h-full flex flex-col group hover:scale-[1.02] hover:-translate-y-1.5"
     >
       {/* Image Container */}
       <motion.div
-        className="relative w-full h-56 bg-gray-200 overflow-hidden"
+        className="relative w-full h-64 bg-gray-200 overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Main Image */}
-        <motion.img
+        <img
           src={image}
           alt={name}
-          className="w-full h-full object-cover"
-          animate={{ scale: isHovered ? 1.15 : 1 }}
-          transition={{ duration: 0.4 }}
+          className={`w-full h-full object-cover transition-transform duration-500 ${
+            isHovered ? "scale-110" : "scale-100"
+          }`}
+          loading="lazy"
+          decoding="async"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop";
+          }}
         />
 
         {/* Discount Badge */}
         {discount > 0 && (
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="absolute top-3 left-3"
-          >
-            <Badge variant="danger" className="text-xs font-bold px-2 py-1">
+          <div className="absolute top-3 right-3 z-10">
+            <div className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
               -{discount}%
-            </Badge>
-          </motion.div>
+            </div>
+          </div>
         )}
 
         {/* Stock Status Badge */}
         {!inStock && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="absolute inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm"
-          >
-            <span className="text-white font-semibold text-lg">
-              Out of Stock
-            </span>
-          </motion.div>
+          <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
+            <span className="text-white font-bold text-lg">Out of Stock</span>
+          </div>
         )}
 
-        {/* Quick View Overlay */}
+        {/* Modern Hover Overlay - Stacked Layout */}
         {isHovered && inStock && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-black/40 flex items-end justify-center p-4 backdrop-blur-sm"
+            className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col items-center justify-end gap-3 p-4 backdrop-blur-sm"
           >
             <motion.button
+              onClick={() => onQuickView?.(product)}
+              initial={{ scale: 0.8, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full py-2 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-50 transition-colors text-sm"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg"
             >
+              <Eye className="w-5 h-5" />
               Quick View
+            </motion.button>
+            <motion.button
+              onClick={() => navigate(`/product/${id}`)}
+              initial={{ scale: 0.8, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-200"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              View Details
             </motion.button>
           </motion.div>
         )}
       </motion.div>
 
       {/* Content Container */}
-      <div className="flex-1 p-4 flex flex-col justify-between">
+      <div className="flex-1 p-5 flex flex-col justify-between">
         {/* Product Name */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
         >
-          <h3 className="text-base font-semibold text-gray-900 line-clamp-2 hover:text-amber-600 transition-colors">
+          <h3 className="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-amber-600 transition-colors">
             {name}
           </h3>
         </motion.div>
@@ -183,51 +196,56 @@ const ProductCard = ({
           {renderRating()}
         </motion.div>
 
-        {/* Price Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-4 flex items-baseline gap-2"
-        >
-          <span className="text-xl font-bold text-gray-900">
-            ${price.toFixed(2)}
-          </span>
-          {originalPrice && originalPrice > price && (
-            <span className="text-sm text-gray-500 line-through">
-              ${originalPrice.toFixed(2)}
-            </span>
-          )}
-        </motion.div>
-
-        {/* Add to Cart Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.25 }}
-          className="mt-4"
-        >
-          <Button
-            onClick={handleAddToCart}
-            disabled={!inStock || isAdding}
-            variant={inStock ? "primary" : "secondary"}
-            className="w-full"
-            size="sm"
+        {/* Price and Add to Cart - Modern Layout */}
+        <div className="mt-4 space-y-3">
+          {/* Price Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-baseline gap-2"
           >
-            {isAdding ? (
-              <motion.span
-                animate={{ opacity: [0.5, 1] }}
-                transition={{ duration: 0.5, repeat: Infinity }}
-              >
-                Adding...
-              </motion.span>
-            ) : inStock ? (
-              "🛒 Add to Cart"
-            ) : (
-              "Out of Stock"
+            <span className="text-2xl font-bold text-amber-600">
+              ${price.toFixed(2)}
+            </span>
+            {originalPrice && originalPrice > price && (
+              <span className="text-sm text-gray-500 line-through">
+                ${originalPrice.toFixed(2)}
+              </span>
             )}
-          </Button>
-        </motion.div>
+          </motion.div>
+
+          {/* Add to Cart Button */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.25 }}
+          >
+            <Button
+              onClick={handleAddToCart}
+              disabled={!inStock || isAdding}
+              variant={inStock ? "primary" : "secondary"}
+              className="w-full py-2.5 rounded-xl font-semibold transition-all duration-200"
+              size="sm"
+            >
+              {isAdding ? (
+                <motion.span
+                  animate={{ opacity: [0.5, 1] }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                >
+                  Adding...
+                </motion.span>
+              ) : inStock ? (
+                <span className="flex items-center justify-center gap-2">
+                  <ShoppingCart className="w-4 h-4" />
+                  Add to Cart
+                </span>
+              ) : (
+                "Out of Stock"
+              )}
+            </Button>
+          </motion.div>
+        </div>
       </div>
 
       {/* In Stock Indicator */}
@@ -236,10 +254,10 @@ const ProductCard = ({
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           transition={{ delay: 0.3 }}
-          className="h-1 bg-gradient-to-r from-amber-400 to-amber-600 origin-left"
+          className="h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 origin-left"
         />
       )}
-    </motion.div>
+    </div>
   );
 };
 

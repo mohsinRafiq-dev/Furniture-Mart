@@ -177,19 +177,19 @@ export default function CategoryDetail() {
                       stiffness: 300,
                       damping: 20,
                     }}
-                    className="h-full bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all cursor-pointer border border-amber-100/50 flex flex-col"
+                    className="h-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group"
                   >
                     {/* Image Container */}
-                    <div className="relative w-full h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
+                    <div className="relative w-full h-64 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
                       {product.images && product.images.length > 0 ? (
                         <motion.img
                           src={product.images[0].url}
                           alt={product.images[0].alt || product.name}
                           className="w-full h-full object-cover"
                           animate={{
-                            scale: hoveredProductId === product._id ? 1.15 : 1,
+                            scale: hoveredProductId === product._id ? 1.1 : 1,
                           }}
-                          transition={{ duration: 0.4 }}
+                          transition={{ duration: 0.5 }}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-6xl">
@@ -197,48 +197,76 @@ export default function CategoryDetail() {
                         </div>
                       )}
 
-                      {/* Hover Overlay */}
+                      {/* Discount Badge */}
+                      {product.discountPercent && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          className="absolute top-3 right-3 z-10"
+                        >
+                          <div className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                            -{product.discountPercent}%
+                          </div>
+                        </motion.div>
+                      )}
+
+                      {/* Stock Status Badge */}
+                      {product.stock === 0 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm"
+                        >
+                          <span className="text-white font-bold text-lg">
+                            Out of Stock
+                          </span>
+                        </motion.div>
+                      )}
+
+                      {/* Modern Hover Overlay - Stacked Layout */}
                       {hoveredProductId === product._id &&
                         product.images &&
-                        product.images.length > 0 && (
+                        product.images.length > 0 &&
+                        product.stock > 0 && (
                           <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-30"
+                            className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col items-center justify-end gap-3 p-4 backdrop-blur-sm z-30"
                           >
-                            <div className="flex gap-3">
-                              <motion.button
-                                onClick={() => {
-                                  setQuickViewProduct(product);
-                                  setQuickViewImageIndex(0);
-                                  setQuickViewZoom(1);
-                                  setShowQuickView(true);
-                                }}
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white font-bold rounded-lg hover:bg-amber-700 transition-colors"
-                              >
-                                <Eye className="w-5 h-5" />
-                                Quick View
-                              </motion.button>
-                              <motion.button
-                                onClick={() =>
-                                  navigate(`/product/${product._id}`)
-                                }
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-colors"
-                              >
-                                <ShoppingCart className="w-5 h-5" />
-                                Details
-                              </motion.button>
-                            </div>
+                            <motion.button
+                              onClick={() => {
+                                setQuickViewProduct(product);
+                                setQuickViewImageIndex(0);
+                                setQuickViewZoom(1);
+                                setShowQuickView(true);
+                                // Disable scrolling on body
+                                document.body.style.overflow = "hidden";
+                              }}
+                              initial={{ scale: 0.8, opacity: 0, y: 10 }}
+                              animate={{ scale: 1, opacity: 1, y: 0 }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg"
+                            >
+                              <Eye className="w-5 h-5" />
+                              Quick View
+                            </motion.button>
+                            <motion.button
+                              onClick={() =>
+                                navigate(`/product/${product._id}`)
+                              }
+                              initial={{ scale: 0.8, opacity: 0, y: 10 }}
+                              animate={{ scale: 1, opacity: 1, y: 0 }}
+                              transition={{ delay: 0.05 }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-200"
+                            >
+                              <ShoppingCart className="w-5 h-5" />
+                              View Details
+                            </motion.button>
                           </motion.div>
                         )}
 
@@ -248,7 +276,7 @@ export default function CategoryDetail() {
                           initial={{ opacity: 0, scale: 0 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.2 }}
-                          className="absolute top-4 right-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-1 rounded-full text-sm font-semibold z-20"
+                          className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold z-20"
                         >
                           Featured
                         </motion.div>
@@ -256,86 +284,91 @@ export default function CategoryDetail() {
                     </div>
 
                     {/* Content */}
-                    <div className="px-6 py-5 flex-1 flex flex-col">
+                    <div className="flex-1 p-5 flex flex-col justify-between">
                       {/* Title */}
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
-                        {product.name}
-                      </h3>
-
-                      {/* Description */}
-                      {product.description && (
-                        <p className="text-gray-600 text-sm mb-4 flex-1 line-clamp-2">
-                          {product.description}
-                        </p>
-                      )}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      >
+                        <h3 className="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-amber-600 transition-colors">
+                          {product.name}
+                        </h3>
+                      </motion.div>
 
                       {/* Rating */}
                       {product.rating && (
                         <motion.div
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
-                          transition={{ delay: 0.1 }}
+                          transition={{ delay: 0.15 }}
                           viewport={{ once: true }}
-                          className="flex items-center gap-2 mb-4"
+                          className="mt-3"
                         >
-                          <div className="flex items-center gap-1">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < Math.floor(product.rating)
-                                    ? "fill-amber-400 text-amber-400"
-                                    : "text-gray-300"
-                                }`}
-                              />
-                            ))}
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < Math.floor(product.rating)
+                                      ? "fill-amber-400 text-amber-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-sm text-gray-600">
+                              {product.rating.toFixed(1)} ({product.reviews}{" "}
+                              reviews)
+                            </span>
                           </div>
-                          <span className="text-sm text-gray-600">
-                            {product.rating.toFixed(1)} ({product.reviews}{" "}
-                            reviews)
-                          </span>
                         </motion.div>
                       )}
 
-                      {/* Stock Status */}
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ delay: 0.1 }}
-                        viewport={{ once: true }}
-                        className="mb-4"
-                      >
-                        <span
-                          className={`text-sm font-semibold ${
-                            product.stock > 0
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }`}
-                        >
-                          {product.stock > 0
-                            ? `${product.stock} in stock`
-                            : "Out of stock"}
-                        </span>
-                      </motion.div>
-
-                      {/* Price and Button */}
-                      <div className="flex items-center justify-between pt-4 border-t border-amber-100/50">
+                      {/* Price and Add to Cart - Modern Layout */}
+                      <div className="mt-4 space-y-3">
+                        {/* Price Section */}
                         <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.2 }}
-                          viewport={{ once: true }}
-                          className="text-2xl font-bold text-amber-600"
+                          className="flex items-baseline gap-2"
                         >
-                          ${product.price.toFixed(2)}
+                          <span className="text-2xl font-bold text-amber-600">
+                            ${product.price.toFixed(2)}
+                          </span>
                         </motion.div>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          disabled={product.stock === 0}
-                          className="p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+
+                        {/* Stock Status */}
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          transition={{ delay: 0.1 }}
+                          viewport={{ once: true }}
                         >
-                          <ShoppingCart className="w-5 h-5" />
+                          <span
+                            className={`text-sm font-semibold ${
+                              product.stock > 0
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {product.stock > 0
+                              ? `${product.stock} in stock`
+                              : "Out of stock"}
+                          </span>
+                        </motion.div>
+
+                        {/* Add to Cart Button */}
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          disabled={product.stock === 0}
+                          className="w-full p-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all"
+                        >
+                          <ShoppingCart className="w-5 h-5 inline mr-2" />
+                          Add to Cart
                         </motion.button>
                       </div>
                     </div>
@@ -375,8 +408,11 @@ export default function CategoryDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-            onClick={() => setShowQuickView(false)}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto pt-20"
+            onClick={() => {
+              setShowQuickView(false);
+              document.body.style.overflow = "unset";
+            }}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -384,24 +420,27 @@ export default function CategoryDetail() {
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-2xl w-full"
+              className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-xl w-full"
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-xl font-bold text-gray-900 line-clamp-1">
                   {quickViewProduct.name}
                 </h2>
                 <motion.button
-                  onClick={() => setShowQuickView(false)}
+                  onClick={() => {
+                    setShowQuickView(false);
+                    document.body.style.overflow = "unset";
+                  }}
                   whileHover={{ rotate: 90 }}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 ml-2"
                 >
-                  <X className="w-6 h-6 text-gray-600" />
+                  <X className="w-5 h-5 text-gray-600" />
                 </motion.button>
               </div>
 
               {/* Image Gallery */}
-              <div className="p-6">
+              <div className="p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
                 {quickViewProduct.images &&
                 quickViewProduct.images.length > 0 ? (
                   <div className="space-y-4">
