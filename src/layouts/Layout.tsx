@@ -56,7 +56,8 @@ function Header({
   return (
     <header className="sticky top-0 z-40 bg-gradient-to-r from-white via-white to-amber-50 shadow-lg border-b-2 border-amber-100">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        {/* Desktop Header */}
+        <div className="hidden sm:flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0 group">
             <Link
@@ -157,7 +158,7 @@ function Header({
                   </g>
                 </svg>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent hidden sm:inline hover:from-amber-700 hover:to-amber-800 transition-all">
+              <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent hover:from-amber-700 hover:to-amber-800 transition-all">
                 Ashraf Furnitures
               </span>
             </Link>
@@ -254,45 +255,209 @@ function Header({
           </div>
         </div>
 
-        {/* Mobile Navigation Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-200">
+        {/* Mobile Header */}
+        <div className="sm:hidden flex items-center justify-between h-16">
+          {/* Mobile Logo with Text */}
+          <div className="flex-shrink-0">
             <Link
               to="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Home
+              <div className="relative w-10 h-10 transform">
+                <svg
+                  viewBox="0 0 48 48"
+                  className="w-full h-full"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <linearGradient
+                      id="ashrafGradientMobile"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stopColor="#d97706" />
+                      <stop offset="100%" stopColor="#b45309" />
+                    </linearGradient>
+                    <filter
+                      id="ashrafShadowMobile"
+                      x="-50%"
+                      y="-50%"
+                      width="200%"
+                      height="200%"
+                    >
+                      <feDropShadow
+                        dx="0"
+                        dy="2"
+                        stdDeviation="3"
+                        floodOpacity="0.2"
+                      />
+                    </filter>
+                  </defs>
+                  <g filter="url(#ashrafShadowMobile)">
+                    <rect
+                      x="8"
+                      y="10"
+                      width="32"
+                      height="12"
+                      rx="4"
+                      fill="url(#ashrafGradientMobile)"
+                      opacity="0.9"
+                    />
+                    <ellipse
+                      cx="24"
+                      cy="26"
+                      rx="16"
+                      ry="8"
+                      fill="url(#ashrafGradientMobile)"
+                    />
+                    <rect
+                      x="6"
+                      y="20"
+                      width="4"
+                      height="12"
+                      rx="2"
+                      fill="url(#ashrafGradientMobile)"
+                      opacity="0.8"
+                    />
+                    <rect
+                      x="38"
+                      y="20"
+                      width="4"
+                      height="12"
+                      rx="2"
+                      fill="url(#ashrafGradientMobile)"
+                      opacity="0.8"
+                    />
+                    <text
+                      x="24"
+                      y="32"
+                      fontSize="14"
+                      fontWeight="bold"
+                      fill="white"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontFamily="Arial, sans-serif"
+                    >
+                      A
+                    </text>
+                  </g>
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent leading-tight">
+                  Ashraf
+                </span>
+                <span className="text-xs font-semibold text-amber-600 leading-tight">
+                  Furnitures
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Mobile Action Buttons */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onCartClick}
+              className="relative p-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 group"
+            >
+              <svg
+                className="w-5 h-5 group-hover:scale-110 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              {cartItems > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold leading-none text-white bg-gradient-to-r from-red-500 to-red-600 rounded-full shadow-lg animate-pulse">
+                  {cartItems}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-50 transition-all"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {mobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="sm:hidden pb-3 border-t border-gray-200 bg-gradient-to-b from-white to-amber-50"
+          >
+            <Link
+              to="/"
+              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              🏠 Home
             </Link>
             <Link
               to="/products"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
+              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Products
+              🛋️ Products
             </Link>
             <Link
               to="/categories"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
+              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Categories
+              📁 Categories
             </Link>
             <Link
               to="/search"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
+              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Search
+              🔍 Search
             </Link>
             <Link
               to="/about"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-amber-600 hover:bg-gray-50"
+              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              About
+              ℹ️ About
             </Link>
-          </div>
+          </motion.div>
         )}
       </nav>
     </header>
