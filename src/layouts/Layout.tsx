@@ -415,43 +415,76 @@ function Header({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="sm:hidden pb-3 border-t border-gray-200 bg-gradient-to-b from-white to-amber-50"
+            className="sm:hidden pb-3 border-t-2 border-amber-200 bg-gradient-to-b from-white via-amber-50/50 to-orange-50 relative overflow-hidden"
           >
-            <Link
-              to="/"
-              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
-              onClick={() => setMobileMenuOpen(false)}
+            {/* Animated Background Blobs */}
+            <motion.div
+              className="absolute inset-0 opacity-30"
+              animate={{ y: [0, 20, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
-              🏠 Home
-            </Link>
-            <Link
-              to="/products"
-              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
-              onClick={() => setMobileMenuOpen(false)}
+              <div className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-br from-amber-400/20 to-transparent rounded-full blur-2xl" />
+            </motion.div>
+
+            <motion.div
+              className="absolute inset-0 opacity-20"
+              animate={{ y: [0, -15, 0] }}
+              transition={{
+                duration: 7,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5,
+              }}
             >
-              🛋️ Products
-            </Link>
-            <Link
-              to="/categories"
-              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
-              onClick={() => setMobileMenuOpen(false)}
+              <div className="absolute top-10 -right-16 w-48 h-48 bg-gradient-to-bl from-orange-300/20 to-transparent rounded-full blur-3xl" />
+            </motion.div>
+
+            <motion.div
+              className="absolute inset-0 opacity-25"
+              animate={{ x: [0, 10, -5, 0] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             >
-              📁 Categories
-            </Link>
-            <Link
-              to="/search"
-              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              🔍 Search
-            </Link>
-            <Link
-              to="/about"
-              className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              ℹ️ About
-            </Link>
+              <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 w-36 h-36 bg-gradient-to-t from-amber-300/15 to-transparent rounded-full blur-2xl" />
+            </motion.div>
+
+            {/* Menu Items Container - relative z-10 */}
+            <div className="relative z-10">
+              <Link
+                to="/"
+                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                🏠 Home
+              </Link>
+              <Link
+                to="/products"
+                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                🛋️ Products
+              </Link>
+              <Link
+                to="/categories"
+                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                📁 Categories
+              </Link>
+              <Link
+                to="/search"
+                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                🔍 Search
+              </Link>
+              <Link
+                to="/about"
+                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                ℹ️ About
+              </Link>
+            </div>
           </motion.div>
         )}
       </nav>
