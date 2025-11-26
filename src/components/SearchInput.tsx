@@ -161,7 +161,7 @@ const SearchInput = ({
 
         {/* Search Icon with Pulse */}
         <motion.div
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center justify-center pointer-events-none"
+          className="absolute left-4 top-5 text-gray-400 flex items-center justify-center pointer-events-none"
           animate={{
             scale: value ? 1.15 : 1,
             color: value ? "#d97706" : "#9ca3af",
@@ -196,7 +196,7 @@ const SearchInput = ({
                 onChange("");
                 setIsOpen(false);
               }}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-600 transition-colors"
+              className="absolute right-4 top-5 text-gray-400 hover:text-red-600 transition-colors"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path
@@ -214,7 +214,7 @@ const SearchInput = ({
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-amber-500"
+            className="absolute right-4 top-5 text-amber-500"
           >
             <svg
               className="w-6 h-6"

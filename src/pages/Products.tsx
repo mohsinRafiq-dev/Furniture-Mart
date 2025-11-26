@@ -96,13 +96,13 @@ export default function Products() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="relative w-full py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 overflow-hidden"
+        className="relative w-full py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 overflow-hidden"
       >
         {/* Premium Animated Background Decorations */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Top Right Large Gradient Orb */}
           <motion.div
-            className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-b from-amber-300/40 via-amber-200/30 to-transparent rounded-full opacity-50 blur-3xl"
+            className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-b from-amber-400/60 via-amber-300/50 to-transparent rounded-full opacity-70 blur-3xl"
             animate={{
               x: [0, 30, 0],
               y: [0, 20, 0],
@@ -112,7 +112,7 @@ export default function Products() {
 
           {/* Bottom Left Large Gradient Orb */}
           <motion.div
-            className="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-tr from-amber-200/40 via-amber-100/30 to-transparent rounded-full opacity-45 blur-3xl"
+            className="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-tr from-amber-400/60 via-amber-300/50 to-transparent rounded-full opacity-65 blur-3xl"
             animate={{
               x: [0, -30, 0],
               y: [0, -20, 0],
@@ -127,7 +127,7 @@ export default function Products() {
 
           {/* Center Glow Effect */}
           <motion.div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-amber-200/30 via-amber-100/20 to-transparent rounded-full opacity-40 blur-3xl"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-amber-300/50 via-amber-200/40 to-transparent rounded-full opacity-60 blur-3xl"
             animate={{
               scale: [1, 1.1, 1],
             }}
@@ -429,11 +429,11 @@ export default function Products() {
                 </motion.div>
               ))}
             </motion.div>
-          ) : (
+          ) : !loading && products.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-2xl text-gray-500 mb-4">No products found</p>
             </div>
-          )}
+          ) : null}
         </div>
       </section>
 
