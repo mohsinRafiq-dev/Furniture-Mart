@@ -9,11 +9,16 @@ const isDev = import.meta.env.DEV;
 const log = (...args: any[]) => isDev && console.log(...args);
 const error = (...args: any[]) => isDev && console.error(...args);
 
+// Always log in production to debug
+console.log("[API Client DEBUG] VITE_API_URL env:", import.meta.env.VITE_API_URL);
+console.log("[API Client DEBUG] VITE_API_BASE_URL env:", import.meta.env.VITE_API_BASE_URL);
+console.log("[API Client DEBUG] Final API_BASE_URL:", API_BASE_URL);
+
 class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
-    log("[API Client] Initializing with baseURL:", API_BASE_URL);
+    console.log("[API Client] Initializing with baseURL:", API_BASE_URL);
     
     this.client = axios.create({
       baseURL: API_BASE_URL,
