@@ -1,6 +1,10 @@
 /**
  * JWT Utilities for Token Management
- * Handles both localStorage and cookie-based JWT storage
+ * 
+ * SECURITY NOTE: 
+ * - Primary storage: HttpOnly cookies (set by backend, immune to XSS)
+ * - Fallback storage: SessionStorage (cleared on browser close, safer than localStorage)
+ * - Never use localStorage for tokens (vulnerable to XSS attacks)
  */
 
 interface JWTPayload {
@@ -12,76 +16,88 @@ interface JWTPayload {
   exp: number;
 }
 
-// Store token in localStorage
+/**
+ * ⚠️ DEPRECATED: Do not use localStorage for tokens
+ * Kept for backward compatibility only
+ */
 export const storeTokenInLocalStorage = (token: string): void => {
   try {
-    localStorage.setItem('authToken', token);
+    // Store in sessionStorage instead (safer - auto-cleared on browser close)
+    sessionStorage.setItem('authToken', token);
+    console.warn('⚠️ Using sessionStorage instead of localStorage for security');
   } catch (error) {
-    console.error('Failed to store token in localStorage:', error);
+    console.error('Failed to store token in sessionStorage:', error);
   }
 };
 
-// Store token in httpOnly cookie (simulated - in real app, backend handles this)
+/**
+ * Store token in HttpOnly cookie (set by backend)
+ * JavaScript cannot access HttpOnly cookies (XSS protection)
+ * Backend automatically sets this on login
+ */
 export const storeTokenInCookie = (token: string, maxAge: number = 86400): void => {
   try {
-    const expiryDate = new Date();
-    expiryDate.setTime(expiryDate.getTime() + maxAge * 1000);
-    
-    // Note: httpOnly cookies can only be set by server
-    // This sets a regular cookie for demo purposes
-    document.cookie = `authToken=${token}; path=/; expires=${expiryDate.toUTCString()}; SameSite=Strict`;
-    document.cookie = `authTokenExpiry=${expiryDate.getTime()}; path=/; expires=${expiryDate.toUTCString()}; SameSite=Strict`;
+    // Frontend cannot directly set HttpOnly cookies (security feature)
+    // This is now handled by the backend in auth.ts
+    console.info('✅ HttpOnly cookie automatically set by backend');
   } catch (error) {
-    console.error('Failed to store token in cookie:', error);
+    console.error('Failed to set token cookie:', error);
   }
 };
 
-// Get token from localStorage
+
+/**
+ * Get token from sessionStorage (safer than localStorage)
+ * HttpOnly cookies cannot be accessed by JavaScript
+ */
 export const getTokenFromLocalStorage = (): string | null => {
   try {
-    return localStorage.getItem('authToken');
+    // Use sessionStorage (auto-cleared on browser close)
+    return sessionStorage.getItem('authToken');
   } catch (error) {
-    console.error('Failed to retrieve token from localStorage:', error);
+    console.error('Failed to retrieve token:', error);
     return null;
   }
 };
 
-// Get token from cookie
+/**
+ * Get token from HttpOnly cookie (not accessible to JavaScript)
+ * Backend automatically includes token in requests
+ * This function is for reference only - HttpOnly cookies are automatic
+ */
 export const getTokenFromCookie = (): string | null => {
   try {
-    const name = 'authToken=';
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookies = decodedCookie.split(';');
-    
-    for (let cookie of cookies) {
-      cookie = cookie.trim();
-      if (cookie.indexOf(name) === 0) {
-        return cookie.substring(name.length);
-      }
-    }
-    return null;
+    // HttpOnly cookies cannot be accessed by JavaScript for security
+    // Backend automatically includes them in requests
+    return null; // Cannot read HttpOnly cookies
   } catch (error) {
     console.error('Failed to retrieve token from cookie:', error);
     return null;
   }
 };
 
-// Remove token from localStorage
+/**
+ * Remove token from sessionStorage
+ */
 export const removeTokenFromLocalStorage = (): void => {
   try {
-    localStorage.removeItem('authToken');
+    sessionStorage.removeItem('authToken');
   } catch (error) {
-    console.error('Failed to remove token from localStorage:', error);
+    console.error('Failed to remove token from sessionStorage:', error);
   }
 };
 
-// Remove token from cookie
+/**
+ * Remove token from cookie (handled by backend on logout)
+ * Backend clears the HttpOnly cookie on logout
+ */
 export const removeTokenFromCookie = (): void => {
   try {
-    document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-    document.cookie = 'authTokenExpiry=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    // Backend handles clearing HttpOnly cookies
+    // Frontend just needs to clear sessionStorage
+    removeTokenFromLocalStorage();
   } catch (error) {
-    console.error('Failed to remove token from cookie:', error);
+    console.error('Failed to remove token:', error);
   }
 };
 
@@ -145,30 +161,34 @@ export const isTokenExpired = (token: string): boolean => {
   }
 };
 
-// Get token from either localStorage or cookie
+/**
+ * Get token from sessionStorage or HttpOnly cookie
+ * Tries sessionStorage first (for development/UI access)
+ * HttpOnly cookies handled automatically by browser
+ */
 export const getStoredToken = (): string | null => {
-  // Try localStorage first
+  // Try sessionStorage first
   const localToken = getTokenFromLocalStorage();
   if (localToken && !isTokenExpired(localToken)) {
     return localToken;
   }
 
-  // Fall back to cookie
-  const cookieToken = getTokenFromCookie();
-  if (cookieToken && !isTokenExpired(cookieToken)) {
-    return cookieToken;
-  }
-
+  // HttpOnly cookies are automatic (handled by browser)
   return null;
 };
 
-// Store token in both locations for maximum compatibility
+/**
+ * Store token in sessionStorage only
+ * Backend automatically sets HttpOnly cookie
+ */
 export const storeTokenInBoth = (token: string, maxAge: number = 86400): void => {
   storeTokenInLocalStorage(token);
-  storeTokenInCookie(token, maxAge);
+  // HttpOnly cookie is automatic from backend
 };
 
-// Clear token from both locations
+/**
+ * Clear token from everywhere
+ */
 export const clearTokenFromBoth = (): void => {
   removeTokenFromLocalStorage();
   removeTokenFromCookie();

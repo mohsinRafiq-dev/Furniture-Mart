@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuthStore } from "../store/authStore";
+import { GoogleLogin } from "@react-oauth/google";
 import {
   Mail,
   Lock,
@@ -17,8 +18,8 @@ const Login: React.FC = () => {
   const location = useLocation();
   const { setUser, setToken } = useAuthStore();
 
-  const [email, setEmail] = useState("admin@furniture-mart.com");
-  const [password, setPassword] = useState("Admin@123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -107,6 +108,72 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleGoogleLogin = async (credentialResponse: any) => {
+    setError("");
+    setSuccess("");
+    setIsLoading(true);
+
+    try {
+      const { credential } = credentialResponse;
+
+      if (!credential) {
+        setError("Google login failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Send token to backend for verification
+      const response = await apiClient.post("/auth/google", {
+        token: credential,
+      });
+
+      if ((response.data as any).success) {
+        const { accessToken, refreshToken, admin } = (response.data as any)
+          .data;
+
+        // Store tokens in localStorage
+        localStorage.setItem("authToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        // Create user object
+        const adminUser = {
+          id: admin.id,
+          email: admin.email,
+          name: admin.name,
+          role: admin.role as "admin" | "editor" | "viewer",
+          avatar: `https://ui-avatars.com/api/?name=${admin.name}&background=f59e0b&color=fff`,
+        };
+
+        // Update auth store
+        setUser(adminUser);
+        setToken(accessToken);
+
+        // Show success message
+        setSuccess("✓ Google login successful! Redirecting to dashboard...");
+
+        // Redirect after short delay
+        setTimeout(() => {
+          const from = location.state?.from?.pathname || "/admin/dashboard";
+          navigate(from, { replace: true });
+        }, 1000);
+      }
+    } catch (err: any) {
+      console.error("[Google Login Error]", err);
+
+      let errorMessage = "Google login failed. Please try again.";
+
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -163,6 +230,33 @@ const Login: React.FC = () => {
               <p className="text-green-400 text-sm">{success}</p>
             </motion.div>
           )}
+
+          {/* Google Login Button */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium text-gray-300">
+              Login with Google
+            </label>
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() => {
+                  setError("Google login failed. Please try again.");
+                }}
+                theme="dark"
+                size="large"
+              />
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-600"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-gray-800/50 text-gray-400">Or</span>
+            </div>
+          </div>
 
           {/* Email Field */}
           <div>
@@ -227,30 +321,6 @@ const Login: React.FC = () => {
               Remember me for 24 hours
             </span>
           </label>
-
-          {/* Admin Credentials Info */}
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-            <p className="text-xs font-medium text-blue-400 mb-2">
-              📝 Admin Credentials:
-            </p>
-            <div className="space-y-1">
-              <p className="text-xs text-gray-300">
-                <span className="text-blue-300 font-medium">Email:</span>{" "}
-                <code className="bg-gray-900/50 px-2 py-1 rounded text-blue-200">
-                  admin@furniture-mart.com
-                </code>
-              </p>
-              <p className="text-xs text-gray-300">
-                <span className="text-blue-300 font-medium">Password:</span>{" "}
-                <code className="bg-gray-900/50 px-2 py-1 rounded text-blue-200">
-                  Admin@123456
-                </code>
-              </p>
-              <p className="text-xs text-blue-300 mt-2">
-                💡 Or try: editor@furniture-mart.com (Editor@123456)
-              </p>
-            </div>
-          </div>
 
           {/* Submit Button */}
           <motion.button
