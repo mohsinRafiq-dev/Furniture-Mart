@@ -264,7 +264,7 @@ function Header({
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <div className="relative w-10 h-10 transform">
+              <div className="relative w-11 h-11 transform">
                 <svg
                   viewBox="0 0 48 48"
                   className="w-full h-full"
@@ -346,14 +346,9 @@ function Header({
                   </g>
                 </svg>
               </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent leading-tight">
-                  Ashraf
-                </span>
-                <span className="text-xs font-semibold text-amber-600 leading-tight">
-                  Furnitures
-                </span>
-              </div>
+              <span className="text-base font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent whitespace-nowrap">
+                Ashraf Furnitures
+              </span>
             </Link>
           </div>
 
