@@ -90,17 +90,11 @@ const AdminDashboard: React.FC = () => {
         apiClient.get("/categories"),
       ]);
 
-      console.log("Products Full Response:", productsRes);
-      console.log("Categories Full Response:", categoriesRes);
-
       // The axios response structure is: { data: { success, message, data: { products/categories, pagination } } }
       // So productsRes.data is the API response body
       const apiProductsData = (productsRes as any).data?.data?.products || [];
       const apiCategoriesData =
         (categoriesRes as any).data?.data?.categories || [];
-
-      console.log("Extracted Products:", apiProductsData);
-      console.log("Extracted Categories:", apiCategoriesData);
 
       setProducts(Array.isArray(apiProductsData) ? apiProductsData : []);
       setCategories(Array.isArray(apiCategoriesData) ? apiCategoriesData : []);

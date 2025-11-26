@@ -3,8 +3,14 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import SearchInput from "../components/SearchInput";
 import ProductGrid, { Product } from "../components/ProductGrid";
-import { Filter, ChevronRight, Sparkles, X } from "lucide-react";
+import SearchStats from "../components/SearchStats";
+import { Filter, ChevronRight, Sparkles, X, TrendingUp } from "lucide-react";
 import { apiClient } from "../services/api/client";
+import {
+  rankProducts,
+  analyzeSearchResults,
+  extractSearchKeywords,
+} from "../utils/searchEngine";
 
 interface SearchSuggestion {
   id: string;
@@ -14,7 +20,7 @@ interface SearchSuggestion {
   image?: string;
 }
 
-// Fetch search results with advanced filtering
+// Fetch search results with advanced filtering and intelligent ranking
 const fetchSearchResults = async (
   query: string,
   category?: string,
@@ -51,7 +57,7 @@ const fetchSearchResults = async (
     const products = response.data?.data?.products || [];
 
     // Transform API products to match Product interface
-    return Array.isArray(products)
+    const transformedProducts: Product[] = Array.isArray(products)
       ? products.map((product: any) => ({
           id: product._id,
           name: product.name,
@@ -63,10 +69,29 @@ const fetchSearchResults = async (
           rating: product.rating || 4.5,
           reviewCount: product.reviews?.length || 0,
           inStock: product.inStock !== false,
+          featured: product.featured || false,
+          category: product.category,
+          description: product.description,
         }))
       : [];
+
+    // Apply intelligent ranking with the advanced search engine
+    // Only apply custom ranking if no specific sort is requested or if it's the default "newest"
+    if (!sortBy || sortBy === "newest") {
+      if (query && query.trim()) {
+        // Use intelligent relevance ranking for text queries
+        const rankedResults = rankProducts(
+          transformedProducts,
+          query,
+          minPrice,
+          maxPrice
+        );
+        return rankedResults.map((r) => r.product);
+      }
+    }
+
+    return transformedProducts;
   } catch (error) {
-    console.error("Error fetching search results:", error);
     return [];
   }
 };
@@ -89,31 +114,16 @@ const fetchSuggestions = async (): Promise<SearchSuggestion[]> => {
     const [categoriesRes, productsRes] = await Promise.all([
       apiClient.get<any>("/categories"),
       apiClient.get<any>("/products/search/advanced", {
-        params: { featured: "true", limit: 6 },
+        params: { limit: 20 }, // Get all products for filtering
       }),
     ]);
 
     const suggestions: SearchSuggestion[] = [];
 
-    // Add categories as suggestions
-    const categories = categoriesRes.data?.data?.categories || [];
-    if (Array.isArray(categories)) {
-      categories.slice(0, 5).forEach((cat: any) => {
-        suggestions.push({
-          id: `cat-${cat._id}`,
-          text: cat.name,
-          type: "category",
-          image:
-            cat.image ||
-            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=200&fit=crop",
-        });
-      });
-    }
-
-    // Add featured products as suggestions
+    // Add ALL products as suggestions (let frontend filter)
     const products = productsRes.data?.data?.products || [];
     if (Array.isArray(products)) {
-      products.slice(0, 5).forEach((prod: any) => {
+      products.forEach((prod: any) => {
         suggestions.push({
           id: `prod-${prod._id}`,
           text: prod.name,
@@ -125,11 +135,23 @@ const fetchSuggestions = async (): Promise<SearchSuggestion[]> => {
       });
     }
 
-    return suggestions.length > 0
-      ? suggestions
-      : [{ id: "1", text: "Loading suggestions...", type: "product" as const }];
+    // Then add all categories
+    const categories = categoriesRes.data?.data?.categories || [];
+    if (Array.isArray(categories)) {
+      categories.forEach((cat: any) => {
+        suggestions.push({
+          id: `cat-${cat._id}`,
+          text: cat.name,
+          type: "category",
+          image:
+            cat.image ||
+            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=200&fit=crop",
+        });
+      });
+    }
+
+    return suggestions;
   } catch (error) {
-    console.error("Error fetching suggestions:", error);
     return [];
   }
 };
@@ -142,17 +164,43 @@ export default function Search() {
   const [maxPrice, setMaxPrice] = useState<number | undefined>();
   const [sortBy, setSortBy] = useState<string>("newest");
   const [showFilters, setShowFilters] = useState(false);
+  const [searchAnalytics, setSearchAnalytics] = useState<any>(null);
+  const [liveResults, setLiveResults] = useState<any[]>([]);
 
-  // Debounce search query
+  // Debounce search query - REDUCED to 100ms for real-time feel
   useMemo(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
-    }, 300);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // React Query for fetching search results
+  // Fetch live results immediately as user types (without debounce)
+  useEffect(() => {
+    const fetchLiveResults = async () => {
+      if (searchQuery.length > 0 && !selectedCategory) {
+        try {
+          const results = await fetchSearchResults(
+            searchQuery,
+            "",
+            minPrice,
+            maxPrice,
+            sortBy
+          );
+          setLiveResults(results);
+        } catch (error) {
+          setLiveResults([]);
+        }
+      } else {
+        setLiveResults([]);
+      }
+    };
+
+    fetchLiveResults();
+  }, [searchQuery, minPrice, maxPrice, sortBy]);
+
+  // React Query for fetching search results (optimized queries with debounce)
   const {
     data: results = [],
     isLoading,
@@ -206,6 +254,22 @@ export default function Search() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
+  // Calculate search analytics when results change
+  useEffect(() => {
+    if (results.length > 0 && debouncedQuery) {
+      const rankedResults = rankProducts(
+        results,
+        debouncedQuery,
+        minPrice,
+        maxPrice
+      );
+      const analytics = analyzeSearchResults(rankedResults);
+      setSearchAnalytics(analytics);
+    } else {
+      setSearchAnalytics(null);
+    }
+  }, [results, debouncedQuery, minPrice, maxPrice]);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setSelectedCategory(""); // Clear category filter when doing text search
@@ -222,8 +286,13 @@ export default function Search() {
     type: string;
     text: string;
   }) => {
-    setSearchQuery(suggestion.text);
-    setSelectedCategory("");
+    if (suggestion.type === "category") {
+      setSearchQuery("");
+      setSelectedCategory(suggestion.text);
+    } else {
+      setSearchQuery(suggestion.text);
+      setSelectedCategory("");
+    }
   };
 
   const clearFilters = () => {
@@ -235,7 +304,9 @@ export default function Search() {
     setSortBy("newest");
   };
 
-  const resultCount = results.length;
+  // Use liveResults for real-time display, fallback to optimized results
+  const displayResults = liveResults.length > 0 ? liveResults : results;
+  const resultCount = displayResults.length;
   const hasActiveFilters =
     searchQuery || selectedCategory || minPrice || maxPrice;
 
@@ -450,7 +521,7 @@ export default function Search() {
             className="mb-8"
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-              <div>
+              <div className="flex-1">
                 {isLoading ? (
                   <motion.div
                     animate={{ opacity: [0.6, 1, 0.6] }}
@@ -489,28 +560,46 @@ export default function Search() {
                     )}
                   </p>
                 ) : (
-                  <p className="text-gray-700">
-                    Found{" "}
-                    <span className="font-bold text-amber-600 text-lg">
-                      {resultCount}
-                    </span>{" "}
-                    <span className="font-medium">
-                      product{resultCount !== 1 ? "s" : ""}
-                    </span>
-                    {selectedCategory && (
-                      <>
-                        {" "}
-                        in <span className="font-bold">{selectedCategory}</span>
-                      </>
+                  <div>
+                    <p className="text-gray-700">
+                      Found{" "}
+                      <span className="font-bold text-amber-600 text-lg">
+                        {resultCount}
+                      </span>{" "}
+                      <span className="font-medium">
+                        product{resultCount !== 1 ? "s" : ""}
+                      </span>
+                      {selectedCategory && (
+                        <>
+                          {" "}
+                          in{" "}
+                          <span className="font-bold">{selectedCategory}</span>
+                        </>
+                      )}
+                      {searchQuery && (
+                        <>
+                          {" "}
+                          matching{" "}
+                          <span className="font-bold">"{searchQuery}"</span>
+                        </>
+                      )}
+                    </p>
+                    {/* Search Quality Indicator */}
+                    {searchAnalytics && resultCount > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="mt-2 flex items-center gap-2"
+                      >
+                        <TrendingUp className="w-4 h-4 text-green-600" />
+                        <span className="text-sm text-gray-600">
+                          Best matches ranked by{" "}
+                          <span className="font-semibold">relevance</span>
+                        </span>
+                      </motion.div>
                     )}
-                    {searchQuery && (
-                      <>
-                        {" "}
-                        matching{" "}
-                        <span className="font-bold">"{searchQuery}"</span>
-                      </>
-                    )}
-                  </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -542,13 +631,28 @@ export default function Search() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <ProductGrid
-                products={results}
-                columns={4}
-                onProductClick={(productId) => {
-                  console.log("Clicked product:", productId);
-                }}
-              />
+              {/* Search Quality Stats */}
+              {debouncedQuery && searchAnalytics && (
+                <SearchStats
+                  query={debouncedQuery}
+                  resultCount={resultCount}
+                  topFactors={searchAnalytics.topFactors}
+                />
+              )}
+
+              {/* Products Grid */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mt-6"
+              >
+                <ProductGrid
+                  products={displayResults}
+                  columns={4}
+                  onProductClick={() => {}}
+                />
+              </motion.div>
             </motion.div>
           ) : searchQuery || selectedCategory ? (
             <motion.div
@@ -566,9 +670,47 @@ export default function Search() {
               <p className="text-2xl text-gray-700 mb-2 font-semibold">
                 No products found
               </p>
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-8">
                 Try adjusting your search terms or browse categories
               </p>
+
+              {/* Search Suggestions Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mt-8"
+              >
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                  Try searching for:
+                </h3>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {categories.slice(0, 4).map((cat: any) => (
+                    <motion.button
+                      key={cat._id}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleCategoryClick(cat.name)}
+                      className="px-4 py-2 bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 font-medium rounded-full hover:shadow-md transition-shadow"
+                    >
+                      {cat.name}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Helpful Tips */}
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg inline-block"
+                >
+                  <p className="text-sm text-blue-700 font-medium">
+                    💡 Tip: Try using specific keywords, brands, or furniture
+                    types
+                  </p>
+                </motion.div>
+              </motion.div>
             </motion.div>
           ) : (
             <motion.div

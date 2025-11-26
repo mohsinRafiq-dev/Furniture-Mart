@@ -147,7 +147,12 @@ const SearchInput = ({
           type="text"
           value={value}
           onChange={(e) => {
-            onChange(e.target.value);
+            const newValue = e.target.value;
+            onChange(newValue);
+            // Auto-trigger search on text input (debounced by parent component)
+            if (newValue.trim()) {
+              onSearch(newValue);
+            }
             setIsOpen(true);
             setHighlightedIndex(-1);
           }}

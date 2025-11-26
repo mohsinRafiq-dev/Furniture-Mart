@@ -4,11 +4,16 @@ const API_BASE_URL =
   (import.meta.env.VITE_API_URL as string) ||
   `${(import.meta.env.VITE_API_BASE_URL as string) || "http://localhost:5000"}/api`;
 
+// Enable console logs only in development
+const isDev = import.meta.env.DEV;
+const log = (...args: any[]) => isDev && console.log(...args);
+const error = (...args: any[]) => isDev && console.error(...args);
+
 class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
-    console.log("[API Client] Initializing with baseURL:", API_BASE_URL);
+    log("[API Client] Initializing with baseURL:", API_BASE_URL);
     
     this.client = axios.create({
       baseURL: API_BASE_URL,
@@ -16,9 +21,6 @@ class ApiClient {
         "Content-Type": "application/json",
       },
       timeout: 10000,
-      params: {
-        t: Date.now() // Add timestamp to prevent caching
-      }
     });
 
     // Add request interceptor for auth token
@@ -27,31 +29,31 @@ class ApiClient {
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-      console.log("[API Request]", config.method?.toUpperCase(), config.url);
+      log("[API Request]", config.method?.toUpperCase(), config.url);
       return config;
     });
 
     // Add response interceptor for error handling
     this.client.interceptors.response.use(
       (response) => {
-        console.log("[API Response] Success:", response.status);
+        log("[API Response] Success:", response.status);
         return response;
       },
-      (error: AxiosError) => {
-        console.error("[API Error]", {
-          status: error.response?.status,
-          statusText: error.response?.statusText,
-          message: error.message,
-          url: error.config?.url,
-          code: error.code,
+      (err: AxiosError) => {
+        error("[API Error]", {
+          status: err.response?.status,
+          statusText: err.response?.statusText,
+          message: err.message,
+          url: err.config?.url,
+          code: err.code,
         });
         
-        if (error.response?.status === 401) {
+        if (err.response?.status === 401) {
           // Handle unauthorized - clear token and redirect
           localStorage.removeItem("authToken");
           window.location.href = "/login";
         }
-        return Promise.reject(error);
+        return Promise.reject(err);
       }
     );
   }
