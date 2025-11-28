@@ -1223,7 +1223,7 @@ const AdminDashboard: React.FC = () => {
                     <span className="w-2 sm:w-3 h-2 sm:h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></span>
                     Top Products by Views
                   </h3>
-                  
+
                   {/* Desktop Table View */}
                   <div className="hidden sm:block overflow-x-auto">
                     <table className="w-full">
@@ -1279,7 +1279,9 @@ const AdminDashboard: React.FC = () => {
                                       ? "🥉"
                                       : idx + 1}
                                   </motion.div>
-                                  <span className="truncate">{product.name}</span>
+                                  <span className="truncate">
+                                    {product.name}
+                                  </span>
                                 </div>
                               </td>
                               <td className="text-xs sm:text-sm text-center text-gray-900 font-bold py-4 px-2 sm:px-4">
@@ -1355,7 +1357,9 @@ const AdminDashboard: React.FC = () => {
                               </p>
                             </div>
                             <div className="bg-white rounded p-2">
-                              <p className="text-gray-600 font-medium">Purchases</p>
+                              <p className="text-gray-600 font-medium">
+                                Purchases
+                              </p>
                               <p className="text-gray-900 font-bold">
                                 {product.purchases.toLocaleString()}
                               </p>
