@@ -135,10 +135,12 @@ const AdminDashboard: React.FC = () => {
     fetchDashboardData();
     fetchAnalyticsData();
 
-    // Handle window resize to show sidebar on desktop
+    // Handle window resize to show/hide sidebar based on screen size
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
       }
     };
 
@@ -717,7 +719,7 @@ const AdminDashboard: React.FC = () => {
                 exit={{ opacity: 0, y: -20 }}
               >
                 <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-8">
-                  Welcome back, {user?.name}! 👋
+                  Welcome back, {user?.name}!
                 </h2>
 
                 {/* Dashboard Stats */}
@@ -906,15 +908,14 @@ const AdminDashboard: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <div className="mb-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6">
                   <motion.button
                     onClick={() => setActiveTab("dashboard")}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.05, x: -4 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors mb-4 font-medium"
+                    className="flex items-center justify-center w-9 sm:w-10 h-9 sm:h-10 bg-gradient-to-br from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 text-blue-600 rounded-lg sm:rounded-xl transition-all shadow-sm border border-blue-200 flex-shrink-0"
                   >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back
+                    <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
                   </motion.button>
                   <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                     Products Management
@@ -937,15 +938,14 @@ const AdminDashboard: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6">
                   <motion.button
                     onClick={() => setActiveTab("dashboard")}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.05, x: -4 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
+                    className="flex items-center justify-center w-9 sm:w-10 h-9 sm:h-10 bg-gradient-to-br from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 text-purple-600 rounded-lg sm:rounded-xl transition-all shadow-sm border border-purple-200 flex-shrink-0"
                   >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back
+                    <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
                   </motion.button>
                   <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                     Categories
@@ -1074,9 +1074,6 @@ const AdminDashboard: React.FC = () => {
                       <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent leading-tight">
                         Analytics & Reports
                       </h2>
-                      <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-1">
-                        Track visitors, views, and product performance
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -1383,24 +1380,19 @@ const AdminDashboard: React.FC = () => {
                 className="space-y-8 pb-8"
               >
                 {/* Header with Back Button */}
-                <div className="flex items-center justify-between gap-4 mb-8">
-                  <div className="flex items-center gap-4">
-                    <motion.button
-                      onClick={() => setActiveTab("dashboard")}
-                      whileHover={{ scale: 1.05, x: -4 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 text-amber-600 rounded-xl transition-all shadow-sm border border-amber-200"
-                    >
-                      <ArrowLeft className="w-5 h-5" />
-                    </motion.button>
-                    <div>
-                      <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                        Settings & Configuration
-                      </h2>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Manage your store, business, and security settings
-                      </p>
-                    </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                  <motion.button
+                    onClick={() => setActiveTab("dashboard")}
+                    whileHover={{ scale: 1.05, x: -4 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center justify-center w-9 sm:w-10 h-9 sm:h-10 bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 text-amber-600 rounded-lg sm:rounded-xl transition-all shadow-sm border border-amber-200 flex-shrink-0"
+                  >
+                    <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
+                  </motion.button>
+                  <div className="min-w-0">
+                    <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent leading-tight">
+                      Settings & Configuration
+                    </h2>
                   </div>
                 </div>
 
