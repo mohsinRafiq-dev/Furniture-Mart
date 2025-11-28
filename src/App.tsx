@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import SplashScreen from "./components/SplashScreen";
 import { SplashProvider, useSplash } from "./context/SplashContext";
 import { useAuthStore } from "./store/authStore";
+import { trackVisitorSession } from "./services/analytics";
 
 // Lazy load page components
 const Home = React.lazy(() => import("./pages/Home"));
@@ -31,6 +32,11 @@ function AppContent() {
   useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
+
+  // Track visitor session on app load
+  useEffect(() => {
+    trackVisitorSession();
+  }, []);
 
   return (
     <>
