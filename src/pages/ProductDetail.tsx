@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { apiClient } from "../services/api/client";
+import { trackProductView } from "../services/analytics";
 import {
   ArrowLeft,
   ShoppingCart,
@@ -42,6 +43,15 @@ export default function ProductDetail() {
       const res = await apiClient.get<any>(`/products/${productId}`);
       const productData = res.data?.data?.product || res.data?.data;
       setProduct(productData);
+
+      // Track product view
+      if (productData && productId) {
+        trackProductView(
+          productId,
+          productData.name || "Unknown Product",
+          "view"
+        );
+      }
 
       // Set the primary image index if available
       if (productData?.images && productData.images.length > 0) {
@@ -451,6 +461,14 @@ export default function ProductDetail() {
                 <Share2 className="w-6 h-6" />
               </motion.button>
               <motion.button
+                onClick={() => {
+                  // Track add to cart
+                  trackProductView(
+                    productId || "",
+                    product.name,
+                    "add_to_cart"
+                  );
+                }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={product.stock === 0}
