@@ -4,10 +4,15 @@
  */
 
 export const apiConfig = {
-  // Base URLs
+  // Base URLs - use Railway in production, localhost in development
   baseURL: import.meta.env.VITE_API_URL || 
-    `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api`,
-  apiBaseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000",
+    (import.meta.env.PROD 
+      ? "https://furniture-mart-backend-production.up.railway.app/api"
+      : "http://localhost:5000/api"),
+  apiBaseURL: import.meta.env.VITE_API_BASE_URL || 
+    (import.meta.env.PROD
+      ? "https://furniture-mart-backend-production.up.railway.app"
+      : "http://localhost:5000"),
 
   // API Timeouts
   timeout: 30000,
