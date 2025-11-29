@@ -170,7 +170,10 @@ export default function ProductDetail() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-12">
           {/* Image Gallery */}
-          <motion.div variants={itemVariants} className="space-y-2 sm:space-y-4">
+          <motion.div
+            variants={itemVariants}
+            className="space-y-2 sm:space-y-4"
+          >
             {/* Main Image with Zoom */}
             <motion.div
               className="relative w-full aspect-square bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg sm:rounded-2xl overflow-hidden shadow-md sm:shadow-lg"
@@ -300,7 +303,10 @@ export default function ProductDetail() {
           </motion.div>
 
           {/* Product Details */}
-          <motion.div variants={itemVariants} className="space-y-4 sm:space-y-6">
+          <motion.div
+            variants={itemVariants}
+            className="space-y-4 sm:space-y-6"
+          >
             {/* Category Badge */}
             <motion.div
               variants={itemVariants}
@@ -391,7 +397,10 @@ export default function ProductDetail() {
             </motion.div>
 
             {/* Features */}
-            <motion.div variants={itemVariants} className="space-y-2 sm:space-y-3">
+            <motion.div
+              variants={itemVariants}
+              className="space-y-2 sm:space-y-3"
+            >
               <div className="flex items-center gap-2 sm:gap-3">
                 <Truck className="w-5 sm:w-6 h-5 sm:h-6 text-amber-600 flex-shrink-0" />
                 <span className="text-xs sm:text-base text-gray-700 font-medium">
@@ -407,7 +416,10 @@ export default function ProductDetail() {
             </motion.div>
 
             {/* Quantity Selector */}
-            <motion.div variants={itemVariants} className="space-y-2 sm:space-y-3">
+            <motion.div
+              variants={itemVariants}
+              className="space-y-2 sm:space-y-3"
+            >
               <label className="block text-xs sm:text-sm font-semibold text-gray-900">
                 Quantity
               </label>
@@ -440,7 +452,10 @@ export default function ProductDetail() {
             </motion.div>
 
             {/* Action Buttons */}
-            <motion.div variants={itemVariants} className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 flex-col sm:flex-row">
+            <motion.div
+              variants={itemVariants}
+              className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 flex-col sm:flex-row"
+            >
               <div className="flex gap-2 sm:gap-3">
                 <motion.button
                   onClick={() => setLiked(!liked)}
@@ -478,8 +493,7 @@ export default function ProductDetail() {
               >
                 <ShoppingCart className="w-4 sm:w-6 h-4 sm:h-6" />
                 <span className="hidden sm:inline">Add to Cart</span>
-                <span className="sm:hidden">Add</span>
-                ({quantity})
+                <span className="sm:hidden">Add</span>({quantity})
               </motion.button>
             </motion.div>
 
