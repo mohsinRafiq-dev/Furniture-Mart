@@ -111,7 +111,7 @@ export default function Home() {
         variants={containerVariants}
         initial="hidden"
         animate={splashComplete ? "visible" : "hidden"}
-        className="relative py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent via-amber-50/50 to-orange-50/30"
+        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent via-amber-50/50 to-orange-50/30"
       >
         {/* Rich Background Decorations */}
         <div className="absolute inset-0 overflow-hidden">
@@ -140,24 +140,27 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Header with Premium Badge */}
-          <motion.div variants={sectionHeaderVariants} className="mb-16">
-            <div className="flex items-center gap-3 mb-4">
+          <motion.div
+            variants={sectionHeaderVariants}
+            className="mb-8 sm:mb-12 lg:mb-16"
+          >
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="w-5 h-5 text-amber-500" />
+                <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-amber-500" />
               </motion.div>
-              <span className="text-sm font-semibold text-amber-600 uppercase tracking-widest">
+              <span className="text-xs sm:text-sm font-semibold text-amber-600 uppercase tracking-widest">
                 Curated Selection
               </span>
             </div>
 
-            <div className="space-y-3">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900">
+            <div className="space-y-2 sm:space-y-3">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
                 Featured Collection
               </h2>
-              <p className="text-lg sm:text-xl text-gray-600 max-w-2xl">
+              <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-600 max-w-2xl">
                 Discover handpicked furniture and decor pieces selected by our
                 design experts to elevate your living space.
               </p>
@@ -168,7 +171,7 @@ export default function Home() {
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="h-1 w-20 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full mt-6 origin-left"
+              className="h-1 w-16 sm:w-20 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full mt-4 sm:mt-6 origin-left"
             />
           </motion.div>
 
@@ -176,12 +179,14 @@ export default function Home() {
           <motion.div variants={containerVariants}>
             {loadingProducts ? (
               <div className="flex justify-center items-center py-12">
-                <div className="text-gray-500">Loading products...</div>
+                <div className="text-gray-500 text-sm sm:text-base">
+                  Loading products...
+                </div>
               </div>
             ) : products.length > 0 ? (
               <ProductGrid products={products} columns={4} gap="lg" />
             ) : (
-              <div className="text-center text-gray-500 py-12">
+              <div className="text-center text-gray-500 py-12 text-sm sm:text-base">
                 No products available
               </div>
             )}
@@ -190,13 +195,13 @@ export default function Home() {
           {/* CTA Section */}
           <motion.div
             variants={sectionHeaderVariants}
-            className="mt-16 flex items-center justify-center"
+            className="mt-8 sm:mt-12 lg:mt-16 flex items-center justify-center"
           >
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/products")}
-              className="group relative px-10 py-4 text-lg font-bold text-white overflow-hidden rounded-xl transition-all"
+              className="group relative px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-bold text-white overflow-hidden rounded-lg sm:rounded-xl transition-all"
             >
               {/* Animated Background */}
               <motion.div
@@ -210,7 +215,7 @@ export default function Home() {
 
               {/* Glow Effect */}
               <motion.div
-                className="absolute -inset-0.5 bg-gradient-to-r from-amber-400 to-amber-600 rounded-xl opacity-0 group-hover:opacity-75 blur transition-all -z-10"
+                className="absolute -inset-0.5 bg-gradient-to-r from-amber-400 to-amber-600 rounded-lg sm:rounded-xl opacity-0 group-hover:opacity-75 blur transition-all -z-10"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 0.75 }}
               />
@@ -230,7 +235,7 @@ export default function Home() {
                   }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
                 </motion.div>
               </motion.div>
             </motion.button>
@@ -244,7 +249,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden"
+        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 overflow-hidden"
       >
         {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900" />
@@ -267,33 +272,33 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="space-y-6"
+            className="space-y-4 sm:space-y-6"
           >
-            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white">
               Stay Updated with New Arrivals
             </h3>
-            <p className="text-lg text-gray-300">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-300">
               Subscribe to our newsletter and get exclusive offers, design tips,
               and early access to new collections.
             </p>
 
             <motion.form
               onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mt-8"
+              className="flex flex-col sm:flex-row gap-2 sm:gap-3 max-w-lg mx-auto mt-6 sm:mt-8"
             >
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-3 rounded-lg text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-l-lg text-sm sm:text-base text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
               />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative px-8 py-3 font-bold text-white overflow-hidden rounded-lg whitespace-nowrap"
+                className="group relative px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-white overflow-hidden rounded-lg sm:rounded-r-lg whitespace-nowrap"
               >
                 <motion.div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-600" />
                 <motion.div
-                  className="absolute -inset-0.5 bg-gradient-to-r from-amber-400 to-amber-600 rounded-lg opacity-0 group-hover:opacity-75 blur -z-10"
+                  className="absolute -inset-0.5 bg-gradient-to-r from-amber-400 to-amber-600 rounded-lg sm:rounded-r-lg opacity-0 group-hover:opacity-75 blur -z-10"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 0.75 }}
                 />

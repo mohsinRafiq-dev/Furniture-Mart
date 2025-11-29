@@ -142,22 +142,22 @@ export default function ProductDetail() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4"
+        className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200 px-3 sm:px-6 lg:px-8 py-2 sm:py-4"
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <motion.button
             onClick={() => navigate(-1)}
             whileHover={{ scale: 1.05, x: -5 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors font-semibold text-gray-700"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 hover:bg-gray-100 rounded-lg transition-colors font-semibold text-gray-700 text-xs sm:text-base"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back
+            <ArrowLeft className="w-4 sm:w-5 h-4 sm:h-5" />
+            <span className="hidden sm:inline">Back</span>
           </motion.button>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex-1 text-center mx-4 line-clamp-1">
+          <h1 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 flex-1 text-center line-clamp-1">
             {product.name}
           </h1>
-          <div className="w-12"></div>
+          <div className="w-8 sm:w-12"></div>
         </div>
       </motion.div>
 
@@ -166,14 +166,14 @@ export default function ProductDetail() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-12">
           {/* Image Gallery */}
-          <motion.div variants={itemVariants} className="space-y-4">
+          <motion.div variants={itemVariants} className="space-y-2 sm:space-y-4">
             {/* Main Image with Zoom */}
             <motion.div
-              className="relative w-full aspect-square bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl overflow-hidden shadow-lg"
+              className="relative w-full aspect-square bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg sm:rounded-2xl overflow-hidden shadow-md sm:shadow-lg"
               transition={{ duration: 0.3 }}
             >
               {currentImage ? (
@@ -199,17 +199,17 @@ export default function ProductDetail() {
                     onClick={prevImage}
                     whileHover={{ scale: 1.1, x: -3 }}
                     whileTap={{ scale: 0.9 }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white text-amber-600 rounded-full shadow-lg transition-all z-10"
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/90 hover:bg-white text-amber-600 rounded-full shadow-md sm:shadow-lg transition-all z-10"
                   >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-5 sm:w-6 h-5 sm:h-6" />
                   </motion.button>
                   <motion.button
                     onClick={nextImage}
                     whileHover={{ scale: 1.1, x: 3 }}
                     whileTap={{ scale: 0.9 }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white text-amber-600 rounded-full shadow-lg transition-all z-10"
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/90 hover:bg-white text-amber-600 rounded-full shadow-md sm:shadow-lg transition-all z-10"
                   >
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-5 sm:w-6 h-5 sm:h-6" />
                   </motion.button>
                 </>
               )}
@@ -219,7 +219,7 @@ export default function ProductDetail() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="absolute bottom-4 right-4 px-3 py-1 bg-black/70 text-white text-sm rounded-full font-semibold"
+                  className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 px-2 sm:px-3 py-1 bg-black/70 text-white text-xs sm:text-sm rounded-full font-semibold"
                 >
                   {currentImageIndex + 1} / {images.length}
                 </motion.div>
@@ -227,33 +227,33 @@ export default function ProductDetail() {
             </motion.div>
 
             {/* Zoom Controls */}
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-2 sm:gap-4 overflow-x-auto">
               <motion.button
                 onClick={() => setProductZoom(Math.max(1, productZoom - 0.2))}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors flex-shrink-0"
                 title="Zoom Out"
               >
-                <ZoomOut className="w-5 h-5" />
+                <ZoomOut className="w-4 sm:w-5 h-4 sm:h-5" />
               </motion.button>
-              <span className="text-sm font-semibold text-gray-700 w-16 text-center">
+              <span className="text-xs sm:text-sm font-semibold text-gray-700 w-12 sm:w-16 text-center flex-shrink-0">
                 {Math.round(productZoom * 100)}%
               </span>
               <motion.button
                 onClick={() => setProductZoom(Math.min(3, productZoom + 0.2))}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors flex-shrink-0"
                 title="Zoom In"
               >
-                <ZoomIn className="w-5 h-5" />
+                <ZoomIn className="w-4 sm:w-5 h-4 sm:h-5" />
               </motion.button>
               <motion.button
                 onClick={() => setProductZoom(1)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="ml-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg transition-colors"
+                className="ml-1 sm:ml-2 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg transition-colors flex-shrink-0"
                 title="Reset Zoom"
               >
                 Reset
@@ -264,7 +264,7 @@ export default function ProductDetail() {
             {images.length > 1 && (
               <motion.div
                 variants={itemVariants}
-                className="grid grid-cols-4 gap-3"
+                className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 gap-2 sm:gap-3"
               >
                 {images.map((img: any, index: number) => (
                   <motion.button
@@ -300,21 +300,21 @@ export default function ProductDetail() {
           </motion.div>
 
           {/* Product Details */}
-          <motion.div variants={itemVariants} className="space-y-6">
+          <motion.div variants={itemVariants} className="space-y-4 sm:space-y-6">
             {/* Category Badge */}
             <motion.div
               variants={itemVariants}
-              className="inline-flex items-center px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold"
+              className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-amber-100 text-amber-700 rounded-full text-xs sm:text-sm font-semibold"
             >
               {product.category}
             </motion.div>
 
             {/* Title */}
             <motion.div variants={itemVariants}>
-              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-2 sm:mb-4 leading-tight">
                 {product.name}
               </h1>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-xs sm:text-base lg:text-lg text-gray-600 leading-relaxed">
                 {product.description}
               </p>
             </motion.div>
@@ -322,13 +322,13 @@ export default function ProductDetail() {
             {/* Rating */}
             <motion.div
               variants={itemVariants}
-              className="flex items-center gap-4"
+              className="flex items-center gap-2 sm:gap-4 flex-wrap"
             >
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5 sm:gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-6 h-6 ${
+                    className={`w-4 sm:w-5 lg:w-6 h-4 sm:h-5 lg:h-6 ${
                       i < Math.floor(product.rating)
                         ? "fill-amber-400 text-amber-400"
                         : "text-gray-300"
@@ -349,9 +349,9 @@ export default function ProductDetail() {
             {/* Price */}
             <motion.div
               variants={itemVariants}
-              className="flex items-baseline gap-4 py-4 border-y border-gray-200"
+              className="flex items-baseline gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200"
             >
-              <p className="text-5xl font-bold text-amber-600">
+              <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-amber-600">
                 ${product.price.toFixed(2)}
               </p>
             </motion.div>
@@ -359,7 +359,7 @@ export default function ProductDetail() {
             {/* Stock Status */}
             <motion.div
               variants={itemVariants}
-              className={`inline-flex items-center gap-2 px-4 py-3 rounded-lg font-semibold ${
+              className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm ${
                 product.stock > 0
                   ? "bg-green-100 text-green-700"
                   : "bg-red-100 text-red-700"
@@ -380,43 +380,43 @@ export default function ProductDetail() {
             {/* SKU */}
             <motion.div
               variants={itemVariants}
-              className="p-4 bg-gray-50 rounded-lg"
+              className="p-3 sm:p-4 bg-gray-50 rounded-lg"
             >
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 SKU:{" "}
-                <span className="font-mono font-bold text-gray-900">
+                <span className="font-mono font-bold text-gray-900 text-xs sm:text-sm">
                   {product.sku}
                 </span>
               </p>
             </motion.div>
 
             {/* Features */}
-            <motion.div variants={itemVariants} className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Truck className="w-6 h-6 text-amber-600" />
-                <span className="text-gray-700 font-medium">
+            <motion.div variants={itemVariants} className="space-y-2 sm:space-y-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Truck className="w-5 sm:w-6 h-5 sm:h-6 text-amber-600 flex-shrink-0" />
+                <span className="text-xs sm:text-base text-gray-700 font-medium">
                   Free shipping on orders over $50
                 </span>
               </div>
-              <div className="flex items-center gap-3">
-                <RefreshCw className="w-6 h-6 text-amber-600" />
-                <span className="text-gray-700 font-medium">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <RefreshCw className="w-5 sm:w-6 h-5 sm:h-6 text-amber-600 flex-shrink-0" />
+                <span className="text-xs sm:text-base text-gray-700 font-medium">
                   30-day returns
                 </span>
               </div>
             </motion.div>
 
             {/* Quantity Selector */}
-            <motion.div variants={itemVariants} className="space-y-3">
-              <label className="block text-sm font-semibold text-gray-900">
+            <motion.div variants={itemVariants} className="space-y-2 sm:space-y-3">
+              <label className="block text-xs sm:text-sm font-semibold text-gray-900">
                 Quantity
               </label>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <motion.button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-bold transition-colors"
+                  className="p-1.5 sm:p-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-bold transition-colors text-sm sm:text-base"
                 >
                   −
                 </motion.button>
@@ -426,13 +426,13 @@ export default function ProductDetail() {
                   onChange={(e) =>
                     setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                   }
-                  className="w-16 px-3 py-2 border-2 border-gray-300 rounded-lg text-center font-bold text-gray-900 focus:border-amber-600 focus:outline-none"
+                  className="w-12 sm:w-16 px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-gray-300 rounded-lg text-center font-bold text-gray-900 focus:border-amber-600 focus:outline-none text-sm sm:text-base"
                 />
                 <motion.button
                   onClick={() => setQuantity(quantity + 1)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-bold transition-colors"
+                  className="p-1.5 sm:p-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-bold transition-colors text-sm sm:text-base"
                 >
                   +
                 </motion.button>
@@ -440,26 +440,28 @@ export default function ProductDetail() {
             </motion.div>
 
             {/* Action Buttons */}
-            <motion.div variants={itemVariants} className="flex gap-3 pt-4">
-              <motion.button
-                onClick={() => setLiked(!liked)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-3 border-2 border-gray-300 hover:border-amber-600 text-gray-900 hover:text-amber-600 rounded-lg transition-colors"
-              >
-                <Heart
-                  className={`w-6 h-6 ${
-                    liked ? "fill-amber-600 text-amber-600" : ""
-                  }`}
-                />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-3 border-2 border-gray-300 hover:border-amber-600 text-gray-900 hover:text-amber-600 rounded-lg transition-colors"
-              >
-                <Share2 className="w-6 h-6" />
-              </motion.button>
+            <motion.div variants={itemVariants} className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 flex-col sm:flex-row">
+              <div className="flex gap-2 sm:gap-3">
+                <motion.button
+                  onClick={() => setLiked(!liked)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 sm:p-3 border-2 border-gray-300 hover:border-amber-600 text-gray-900 hover:text-amber-600 rounded-lg transition-colors"
+                >
+                  <Heart
+                    className={`w-5 sm:w-6 h-5 sm:h-6 ${
+                      liked ? "fill-amber-600 text-amber-600" : ""
+                    }`}
+                  />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 sm:p-3 border-2 border-gray-300 hover:border-amber-600 text-gray-900 hover:text-amber-600 rounded-lg transition-colors"
+                >
+                  <Share2 className="w-5 sm:w-6 h-5 sm:h-6" />
+                </motion.button>
+              </div>
               <motion.button
                 onClick={() => {
                   // Track add to cart
@@ -472,17 +474,19 @@ export default function ProductDetail() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={product.stock === 0}
-                className="flex-1 px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                className="flex-1 px-4 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 sm:gap-2 shadow-md sm:shadow-lg hover:shadow-lg sm:hover:shadow-xl text-xs sm:text-base"
               >
-                <ShoppingCart className="w-6 h-6" />
-                Add to Cart ({quantity})
+                <ShoppingCart className="w-4 sm:w-6 h-4 sm:h-6" />
+                <span className="hidden sm:inline">Add to Cart</span>
+                <span className="sm:hidden">Add</span>
+                ({quantity})
               </motion.button>
             </motion.div>
 
             {/* Trust Badges */}
             <motion.div
               variants={itemVariants}
-              className="pt-6 border-t border-gray-200 flex items-center justify-center gap-8 text-center text-sm text-gray-600"
+              className="pt-4 sm:pt-6 border-t border-gray-200 grid grid-cols-3 gap-2 sm:gap-4 text-center text-xs sm:text-sm text-gray-600"
             >
               <div>✓ 100% Authentic</div>
               <div>✓ Secure Checkout</div>
@@ -494,12 +498,12 @@ export default function ProductDetail() {
         {/* Related Products Section - Optional */}
         <motion.div
           variants={itemVariants}
-          className="mt-20 pt-12 border-t border-gray-200"
+          className="mt-12 sm:mt-16 lg:mt-20 pt-8 sm:pt-10 lg:pt-12 border-t border-gray-200"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
             Similar Products
           </h2>
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-8 sm:py-12 text-gray-500 text-xs sm:text-base">
             <p>Similar products would appear here</p>
           </div>
         </motion.div>

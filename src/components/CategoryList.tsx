@@ -322,7 +322,7 @@ const CategoryList = ({
       variants={containerVariants}
       initial="hidden"
       animate={animationsReady ? "visible" : "hidden"}
-      className="relative w-full py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 overflow-hidden"
+      className="relative w-full py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 overflow-hidden"
     >
       {/* Premium Animated Background Decorations */}
       <div className="absolute inset-0 overflow-hidden">
@@ -430,13 +430,13 @@ const CategoryList = ({
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header with Premium Design */}
-        <div className="flex items-center justify-between mb-16">
+        <div className="flex items-center justify-between mb-12 sm:mb-16 flex-col sm:flex-row gap-6 sm:gap-0">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="space-y-4 flex-1"
+            className="space-y-2 sm:space-y-4 flex-1 w-full sm:w-auto"
           >
             {/* Premium Badge */}
             <motion.div
@@ -444,9 +444,9 @@ const CategoryList = ({
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/50 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/50 rounded-full backdrop-blur-sm text-xs sm:text-sm"
             >
-              <span className="text-amber-600 font-semibold text-sm uppercase tracking-widest">
+              <span className="text-amber-600 font-semibold uppercase tracking-widest">
                 ✨ Browse
               </span>
             </motion.div>
@@ -457,7 +457,7 @@ const CategoryList = ({
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
               viewport={{ once: true }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight"
+              className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight"
             >
               Shop by
               <motion.span
@@ -478,7 +478,7 @@ const CategoryList = ({
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
               viewport={{ once: true }}
-              className="text-lg text-gray-600 max-w-xl"
+              className="text-xs sm:text-base lg:text-lg text-gray-600 max-w-xl"
             >
               Explore our diverse range of curated collections tailored to
               transform every room in your home
@@ -490,7 +490,7 @@ const CategoryList = ({
               whileInView={{ scaleX: 1, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.7 }}
               viewport={{ once: true }}
-              className="h-1 w-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full origin-left mt-4"
+              className="h-1 w-12 sm:w-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full origin-left mt-3 sm:mt-4"
             />
           </motion.div>
 
@@ -563,7 +563,7 @@ const CategoryList = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory"
+          className="flex gap-3 sm:gap-6 overflow-x-auto pb-2 sm:pb-4 scroll-smooth snap-x snap-mandatory"
           style={{ scrollBehavior: "smooth" }}
         >
           {isLoading

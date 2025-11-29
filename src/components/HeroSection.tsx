@@ -188,18 +188,21 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
         className="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto"
       >
         {/* Top Badge */}
-        <motion.div variants={itemVariants} className="inline-block mb-6">
-          <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/50 rounded-full backdrop-blur-sm">
+        <motion.div
+          variants={itemVariants}
+          className="inline-block mb-4 sm:mb-6"
+        >
+          <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-amber-500/20 border border-amber-500/50 rounded-full backdrop-blur-sm">
             <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-            <span className="text-sm font-semibold text-amber-400">
+            <span className="text-xs sm:text-sm font-semibold text-amber-400">
               ✨ Special Offer - Up to 50% Off
             </span>
           </div>
         </motion.div>
 
         {/* Headline with Character Animation */}
-        <motion.div variants={headlineVariants} className="mb-6">
-          <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold text-white mb-4 leading-tight">
+        <motion.div variants={headlineVariants} className="mb-4 sm:mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl xl:text-8xl font-bold text-white mb-2 sm:mb-4 leading-tight">
             Transform Your
             <motion.span
               className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 pb-[10px]"
@@ -213,8 +216,11 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
         </motion.div>
 
         {/* Subheadline with Line-by-line animation */}
-        <motion.div variants={itemVariants} className="mb-10 max-w-2xl mx-auto">
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 leading-relaxed font-light">
+        <motion.div
+          variants={itemVariants}
+          className="mb-8 sm:mb-10 max-w-2xl mx-auto px-2 sm:px-0"
+        >
+          <p className="text-xs sm:text-base lg:text-lg xl:text-2xl text-gray-300 leading-relaxed font-light">
             Discover curated premium furniture and home decor that transforms
             your house into a sanctuary of style and comfort.
           </p>
@@ -223,14 +229,14 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
         {/* CTA Buttons with Enhanced Styling */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12"
+          className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center mb-8 sm:mb-12"
         >
           {/* Explore Collection Button */}
           <Link to="/categories">
             <motion.button
               whileHover="hover"
               whileTap={{ scale: 0.92 }}
-              className="group relative px-12 py-4 text-lg font-bold text-white overflow-hidden rounded-xl transition-all duration-300"
+              className="group relative px-6 sm:px-12 py-2.5 sm:py-4 text-sm sm:text-lg font-bold text-white overflow-hidden rounded-lg sm:rounded-xl transition-all duration-300 w-full sm:w-auto"
             >
               {/* Animated Background Gradient */}
               <motion.div
@@ -258,7 +264,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
 
               {/* Button Content */}
               <motion.div
-                className="relative flex items-center gap-3 justify-center"
+                className="relative flex items-center gap-2 sm:gap-3 justify-center"
                 variants={{
                   hover: {
                     transition: { staggerChildren: 0.05 },
@@ -271,17 +277,19 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
                     hover: { rotate: 15, scale: 1.2 },
                   }}
                   transition={{ type: "spring", stiffness: 400 }}
+                  className="hidden sm:inline"
                 >
                   🛋️
                 </motion.span>
-                <span>Explore Collection</span>
+                <span className="hidden sm:inline">Explore Collection</span>
+                <span className="sm:hidden">Explore</span>
                 <motion.div
                   variants={{
                     hover: { x: 5 },
                   }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
                 </motion.div>
               </motion.div>
             </motion.button>
@@ -292,7 +300,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
             <motion.button
               whileHover="hover"
               whileTap={{ scale: 0.92 }}
-              className="group relative px-12 py-4 text-lg font-bold text-white overflow-hidden rounded-xl border-2 border-white transition-all duration-300 backdrop-blur-md"
+              className="group relative px-6 sm:px-12 py-2.5 sm:py-4 text-sm sm:text-lg font-bold text-white overflow-hidden rounded-lg sm:rounded-xl border-2 border-white transition-all duration-300 backdrop-blur-md w-full sm:w-auto"
             >
               {/* Animated Border Glow */}
               <motion.div
@@ -310,7 +318,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
 
               {/* Button Content */}
               <motion.div
-                className="relative flex items-center gap-3 justify-center"
+                className="relative flex items-center gap-2 sm:gap-3 justify-center"
                 variants={{
                   hover: {
                     transition: { staggerChildren: 0.05 },
@@ -319,28 +327,29 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
                 whileHover="hover"
               >
                 <motion.div
-                  className="w-5 h-5 flex items-center justify-center"
+                  className="w-4 sm:w-5 h-4 sm:h-5 flex items-center justify-center"
                   variants={{
                     hover: { rotate: -15, scale: 1.2 },
                   }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <Search className="w-5 h-5" />
+                  <Search className="w-4 sm:w-5 h-4 sm:h-5" />
                 </motion.div>
-                <span>Search Products</span>
+                <span className="hidden sm:inline">Search Products</span>
+                <span className="sm:hidden">Search</span>
                 <motion.div
                   variants={{
                     hover: { x: 5 },
                   }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
                 </motion.div>
               </motion.div>
 
               {/* Border Animation on Hover */}
               <motion.div
-                className="absolute inset-0 rounded-xl border-2 border-amber-400 opacity-0 group-hover:opacity-100"
+                className="absolute inset-0 rounded-lg sm:rounded-xl border-2 border-amber-400 opacity-0 group-hover:opacity-100"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
@@ -351,7 +360,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
         {/* Feature Badges with Icons */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-wrap gap-4 justify-center items-center mb-6"
+          className="flex flex-wrap gap-2 sm:gap-4 justify-center items-center mb-4 sm:mb-6 px-2"
         >
           {features.map((feature, index) => (
             <motion.div
@@ -366,12 +375,12 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
             >
               <motion.div
                 variants={badgeVariants}
-                className="flex items-center gap-3 px-6 py-3 backdrop-blur-md bg-white/10 hover:bg-white/15 border border-white/20 rounded-full transition-all"
+                className="flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-1.5 sm:py-3 backdrop-blur-md bg-white/10 hover:bg-white/15 border border-white/20 rounded-full transition-all text-xs sm:text-sm"
               >
-                <motion.div className="text-amber-400 group-hover:text-amber-300">
+                <motion.div className="text-amber-400 group-hover:text-amber-300 w-4 sm:w-5 h-4 sm:h-5 flex items-center justify-center">
                   {feature.icon}
                 </motion.div>
-                <span className="text-sm font-semibold text-white/90 group-hover:text-white">
+                <span className="font-semibold text-white/90 group-hover:text-white">
                   {feature.label}
                 </span>
               </motion.div>
@@ -382,21 +391,27 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
         {/* Trust Indicators */}
         <motion.div
           variants={itemVariants}
-          className="flex gap-8 justify-center items-center text-white/70"
+          className="flex gap-3 sm:gap-8 justify-center items-center text-white/70 px-2 flex-wrap"
         >
           <div className="text-center">
-            <div className="text-2xl font-bold text-amber-400">50K+</div>
-            <div className="text-sm">Happy Customers</div>
+            <div className="text-lg sm:text-2xl font-bold text-amber-400">
+              50K+
+            </div>
+            <div className="text-xs sm:text-sm">Happy Customers</div>
           </div>
-          <div className="w-px h-8 bg-white/20" />
+          <div className="w-px h-6 sm:h-8 bg-white/20" />
           <div className="text-center">
-            <div className="text-2xl font-bold text-amber-400">10K+</div>
-            <div className="text-sm">Products</div>
+            <div className="text-lg sm:text-2xl font-bold text-amber-400">
+              10K+
+            </div>
+            <div className="text-xs sm:text-sm">Products</div>
           </div>
-          <div className="w-px h-8 bg-white/20" />
+          <div className="w-px h-6 sm:h-8 bg-white/20" />
           <div className="text-center">
-            <div className="text-2xl font-bold text-amber-400">4.9★</div>
-            <div className="text-sm">Rating</div>
+            <div className="text-lg sm:text-2xl font-bold text-amber-400">
+              4.9★
+            </div>
+            <div className="text-xs sm:text-sm">Rating</div>
           </div>
         </motion.div>
       </motion.div>
