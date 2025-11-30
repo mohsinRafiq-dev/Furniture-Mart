@@ -330,8 +330,6 @@ export default function Home() {
                 <span className="relative">Subscribe</span>
               </motion.button>
             </motion.form>
-              </motion.button>
-            </motion.form>
           </motion.div>
         </div>
       </motion.section>
