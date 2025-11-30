@@ -25,7 +25,7 @@ class ApiClient {
       headers: {
         "Content-Type": "application/json",
       },
-      timeout: 10000,
+      timeout: 30000, // Increased to 30s for slow mobile networks
     });
 
     // Add request interceptor for auth token
@@ -76,9 +76,36 @@ class ApiClient {
     );
   }
 
-  // GET requests
-  get<T>(url: string, config = {}) {
-    return this.client.get<T>(url, config);
+  // GET requests with retry logic for mobile networks
+  async get<T>(url: string, config = {}, retries = 3) {
+    let lastError: any;
+    
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        console.log(`[API GET] Attempt ${attempt}/${retries} for ${url}`);
+        const response = await this.client.get<T>(url, config);
+        console.log(`[API GET SUCCESS] ${url} on attempt ${attempt}`);
+        return response;
+      } catch (err: any) {
+        lastError = err;
+        console.warn(`[API GET FAILED] Attempt ${attempt}/${retries} for ${url}:`, {
+          code: err.code,
+          message: err.message,
+          status: err.response?.status,
+        });
+        
+        // Only retry on network errors, not on 4xx/5xx responses
+        if (err.response || attempt === retries) {
+          break;
+        }
+        
+        // Wait before retrying (exponential backoff: 500ms, 1s, 2s)
+        const delay = 500 * Math.pow(2, attempt - 1);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    
+    throw lastError;
   }
 
   // POST requests
