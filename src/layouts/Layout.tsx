@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import CartDrawer from "../components/CartDrawer";
 import { useCartStore } from "../store/cartStore";
+import { useWishlistStore } from "../store/wishlistStore";
 import {
   Phone,
   Mail,
@@ -15,6 +16,7 @@ import {
   LayoutGrid,
   Search,
   Info,
+  Heart,
 } from "lucide-react";
 
 interface LayoutProps {
@@ -217,6 +219,19 @@ function Header({
 
           {/* Cart and Mobile Menu Button */}
           <div className="flex items-center gap-2">
+            {/* Wishlist Button */}
+            <Link to="/wishlist">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative p-2.5 text-gray-700 group transition-all duration-200"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-100/30 to-orange-100/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                <Heart className="w-6 h-6 text-amber-600 group-hover:text-red-500 transition-colors relative z-10" />
+                <WishlistBadge />
+              </motion.button>
+            </Link>
+
             {/* Cart Button - Premium Style */}
             <motion.button
               onClick={onCartClick}
@@ -405,6 +420,15 @@ function Header({
                 </span>
               )}
             </button>
+
+            {/* Mobile Wishlist Button */}
+            <Link
+              to="/wishlist"
+              className="relative p-2 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200 group"
+            >
+              <Heart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <WishlistBadge />
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
@@ -812,5 +836,24 @@ function Footer() {
         </motion.div>
       </div>
     </footer>
+  );
+}
+
+function WishlistBadge() {
+  const { getWishlistCount } = useWishlistStore();
+  const count = getWishlistCount();
+
+  return (
+    <>
+      {count > 0 && (
+        <motion.span
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center w-5 h-5 text-xs font-bold leading-none text-white bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg"
+        >
+          {count}
+        </motion.span>
+      )}
+    </>
   );
 }

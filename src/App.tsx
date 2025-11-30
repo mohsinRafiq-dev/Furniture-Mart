@@ -5,6 +5,8 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import ScrollToTop from "./components/ScrollToTop";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SplashScreen from "./components/SplashScreen";
+import { ToastContainer } from "./components/Toast";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SplashProvider, useSplash } from "./context/SplashContext";
 import { useAuthStore } from "./store/authStore";
 import { trackVisitorSession } from "./services/analytics";
@@ -19,6 +21,7 @@ const ProductDetail = React.lazy(() => import("./pages/ProductDetail"));
 const Product = React.lazy(() => import("./pages/Product"));
 const Search = React.lazy(() => import("./pages/Search"));
 const Cart = React.lazy(() => import("./pages/Cart"));
+const Wishlist = React.lazy(() => import("./pages/Wishlist"));
 const Checkout = React.lazy(() => import("./pages/Checkout"));
 const Login = React.lazy(() => import("./pages/Login"));
 const AdminPortal = React.lazy(() => import("./pages/AdminPortal"));
@@ -58,6 +61,7 @@ function AppContent() {
               <Route path="/product-old/:slug" element={<Product />} />
               <Route path="/search" element={<Search />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/login" element={<Login />} />
 
@@ -86,6 +90,7 @@ function AppContent() {
           </Suspense>
         </MainLayout>
       </Router>
+      <ToastContainer />
     </>
   );
 }
@@ -103,8 +108,10 @@ function NotFound() {
 
 export default function App() {
   return (
-    <SplashProvider>
-      <AppContent />
-    </SplashProvider>
+    <ErrorBoundary>
+      <SplashProvider>
+        <AppContent />
+      </SplashProvider>
+    </ErrorBoundary>
   );
 }

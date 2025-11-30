@@ -102,6 +102,25 @@ const badgeVariants = {
 
 const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionPreference = (e: MediaQueryListEvent) =>
+      setPrefersReducedMotion(e.matches);
+
+    window.addEventListener("resize", handleResize);
+    mediaQuery.addEventListener("change", handleMotionPreference);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      mediaQuery.removeEventListener("change", handleMotionPreference);
+    };
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -110,6 +129,8 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const particleCount = isMobile ? 8 : 15;
 
   const features = [
     { icon: <Truck className="w-5 h-5" />, label: "Free Shipping" },
@@ -141,27 +162,28 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
 
-      {/* Animated Particles/Sparkles */}
-      {[...Array(15)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-amber-400 rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            opacity: [0.3, 1, 0.3],
-            scale: [0, 1, 0],
-            y: [0, -30, -60],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
+      {/* Animated Particles/Sparkles - Reduced on Mobile & Respects Motion Preference */}
+      {!prefersReducedMotion &&
+        [...Array(particleCount)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-amber-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              opacity: [0.3, 1, 0.3],
+              scale: [0, 1, 0],
+              y: [0, -30, -60],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
 
       {/* Background Image Indicators */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
@@ -416,15 +438,21 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
         </motion.div>
       </motion.div>
 
-      {/* Enhanced Scroll Indicator */}
+      {/* Enhanced Scroll Indicator - Respects Motion Preference */}
       <motion.div
-        animate={{ y: [0, 12, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? {} : { y: [0, 12, 0] }}
+        transition={
+          prefersReducedMotion
+            ? {}
+            : { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
+        }
         className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex z-10"
       >
         <motion.div
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          animate={prefersReducedMotion ? {} : { opacity: [0.5, 1, 0.5] }}
+          transition={
+            prefersReducedMotion ? {} : { duration: 2, repeat: Infinity }
+          }
           className="flex flex-col items-center gap-1"
         >
           <span className="text-xs text-white/60 font-semibold tracking-widest">

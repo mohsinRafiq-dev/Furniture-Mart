@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { apiClient } from "../services/api/client";
+import { SkeletonGrid } from "../components/ProductSkeleton";
+import { WishlistButton } from "../components/WishlistButton";
 import {
   Star,
   X,
@@ -9,7 +11,6 @@ import {
   ZoomOut,
   Eye,
   ShoppingCart,
-  Loader,
   Sparkles,
 } from "lucide-react";
 
@@ -38,6 +39,16 @@ export default function Products() {
   const [showQuickView, setShowQuickView] = useState(false);
   const [quickViewImageIndex, setQuickViewImageIndex] = useState(0);
   const [quickViewZoom, setQuickViewZoom] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const productsPerPage = 12;
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Animation variants for product cards
   const itemVariants = {
@@ -87,40 +98,52 @@ export default function Products() {
         transition={{ duration: 0.6 }}
         className="relative w-full py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8"
       >
-        {/* Premium Animated Background Decorations */}
+        {/* Premium Animated Background Decorations - Skip on Mobile */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Top Right Large Gradient Orb */}
-          <motion.div
-            className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-b from-amber-300/40 via-amber-200/30 to-transparent rounded-full opacity-50 blur-3xl"
-            animate={{
-              x: [0, 30, 0],
-              y: [0, 20, 0],
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
+          {/* Top Right Large Gradient Orb - Hidden on Mobile */}
+          {!isMobile && (
+            <motion.div
+              className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-b from-amber-300/40 via-amber-200/30 to-transparent rounded-full opacity-50 blur-3xl"
+              animate={{
+                x: [0, 30, 0],
+                y: [0, 20, 0],
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+          )}
 
-          {/* Bottom Left Large Gradient Orb */}
-          <motion.div
-            className="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-tr from-orange-200/40 via-amber-100/30 to-transparent rounded-full opacity-45 blur-3xl"
-            animate={{
-              x: [0, -30, 0],
-              y: [0, -20, 0],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1,
-            }}
-          />
+          {/* Bottom Left Large Gradient Orb - Hidden on Mobile */}
+          {!isMobile && (
+            <motion.div
+              className="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-tr from-orange-200/40 via-amber-100/30 to-transparent rounded-full opacity-45 blur-3xl"
+              animate={{
+                x: [0, -30, 0],
+                y: [0, -20, 0],
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+            />
+          )}
 
-          {/* Center Glow Effect */}
+          {/* Center Glow Effect - Subtle on Mobile */}
           <motion.div
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-amber-200/30 via-orange-100/20 to-transparent rounded-full opacity-40 blur-3xl"
-            animate={{
-              scale: [1, 1.1, 1],
-            }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            animate={
+              isMobile
+                ? {}
+                : {
+                    scale: [1, 1.1, 1],
+                  }
+            }
+            transition={
+              isMobile
+                ? {}
+                : { duration: 6, repeat: Infinity, ease: "easeInOut" }
+            }
           />
         </div>
 
@@ -205,29 +228,8 @@ export default function Products() {
               className="h-1 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full origin-left mx-auto mt-4"
             />
 
-            {/* Loading State - Inside Header */}
-            {loading && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-12 mt-8"
-              >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                >
-                  <Loader className="w-8 h-8 text-orange-600" />
-                </motion.div>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-gray-600 mt-3 text-base"
-                >
-                  Loading our amazing products...
-                </motion.p>
-              </motion.div>
-            )}
+            {/* Loading State - Show Skeleton Grid */}
+            {loading && <SkeletonGrid count={12} />}
           </motion.div>
         </div>
       </motion.section>
@@ -251,161 +253,240 @@ export default function Products() {
               </button>
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              {products.map((product) => (
-                <motion.div
-                  key={product._id}
-                  variants={itemVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "0px 0px -100px 0px" }}
-                  onMouseEnter={() => setHoveredProductId(product._id)}
-                  onMouseLeave={() => setHoveredProductId(null)}
-                  className="group"
-                >
-                  <div className="h-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group hover:-translate-y-2">
-                    {/* Image Container */}
-                    <div className="relative w-full h-40 sm:h-48 lg:h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
-                      {product.images && product.images.length > 0 ? (
-                        <img
-                          src={product.images[0].url}
-                          alt={product.images[0].alt || product.name}
-                          className={`w-full h-full object-cover transition-transform duration-500 ${
-                            hoveredProductId === product._id
-                              ? "scale-110"
-                              : "scale-100"
-                          }`}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-6xl">
-                          🛋️
-                        </div>
-                      )}
+            <>
+              {/* Calculate paginated products */}
+              {(() => {
+                const indexOfLastProduct = currentPage * productsPerPage;
+                const indexOfFirstProduct =
+                  indexOfLastProduct - productsPerPage;
+                const currentProducts = products.slice(
+                  indexOfFirstProduct,
+                  indexOfLastProduct
+                );
+                const totalPages = Math.ceil(products.length / productsPerPage);
 
-                      {/* Discount Badge */}
-                      {product.discount && (
-                        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10">
-                          <div className="bg-red-500 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-bold">
-                            -{product.discount}%
-                          </div>
-                        </div>
-                      )}
+                return (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                      {currentProducts.map((product) => (
+                        <motion.div
+                          key={product._id}
+                          variants={itemVariants}
+                          initial="hidden"
+                          whileInView="visible"
+                          viewport={{
+                            once: true,
+                            margin: "0px 0px -100px 0px",
+                          }}
+                          onMouseEnter={() => setHoveredProductId(product._id)}
+                          onMouseLeave={() => setHoveredProductId(null)}
+                          className="group"
+                        >
+                          <div className="h-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group hover:-translate-y-2">
+                            {/* Image Container */}
+                            <div className="relative w-full h-40 sm:h-48 lg:h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
+                              {/* Wishlist Button - Outside overlay so it stays visible */}
+                              <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-40 pointer-events-auto">
+                                <WishlistButton
+                                  id={product._id}
+                                  name={product.name}
+                                  price={product.price}
+                                  image={product.images?.[0]?.url || ""}
+                                />
+                              </div>
 
-                      {/* Stock Status Badge */}
-                      {product.stock === 0 && (
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
-                          <span className="text-white font-bold text-lg">
-                            Out of Stock
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Modern Hover Overlay - Stacked Layout */}
-                      {hoveredProductId === product._id &&
-                        product.images &&
-                        product.images.length > 0 &&
-                        product.stock > 0 && (
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col items-center justify-end gap-3 p-4 backdrop-blur-sm z-30">
-                            <button
-                              onClick={() => {
-                                setQuickViewProduct(product);
-                                setQuickViewImageIndex(0);
-                                setQuickViewZoom(1);
-                                setShowQuickView(true);
-                                document.body.style.overflow = "hidden";
-                              }}
-                              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:scale-105 active:scale-95"
-                            >
-                              <Eye className="w-5 h-5" />
-                              Quick View
-                            </button>
-                            <button
-                              onClick={() =>
-                                navigate(`/product/${product._id}`)
-                              }
-                              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
-                            >
-                              <ShoppingCart className="w-5 h-5" />
-                              View Details
-                            </button>
-                          </div>
-                        )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 p-3 sm:p-5 flex flex-col justify-between">
-                      {/* Title */}
-                      <div>
-                        <h3 className="text-xs sm:text-sm lg:text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-amber-600 transition-colors">
-                          {product.name}
-                        </h3>
-                      </div>
-
-                      {/* Rating */}
-                      {product.rating && (
-                        <div className="mt-3">
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`w-3 sm:w-4 h-3 sm:h-4 ${
-                                    i < Math.floor(product.rating)
-                                      ? "fill-amber-400 text-amber-400"
-                                      : "text-gray-300"
+                              {product.images && product.images.length > 0 ? (
+                                <img
+                                  src={product.images[0].url}
+                                  alt={product.images[0].alt || product.name}
+                                  className={`w-full h-full object-cover transition-transform duration-500 ${
+                                    hoveredProductId === product._id
+                                      ? "scale-110"
+                                      : "scale-100"
                                   }`}
                                 />
-                              ))}
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-6xl">
+                                  🛋️
+                                </div>
+                              )}
+
+                              {/* Discount Badge */}
+                              {product.discount && (
+                                <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10">
+                                  <div className="bg-red-500 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-bold">
+                                    -{product.discount}%
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Stock Status Badge */}
+                              {product.stock === 0 && (
+                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
+                                  <span className="text-white font-bold text-lg">
+                                    Out of Stock
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Modern Hover Overlay - Stacked Layout */}
+                              {hoveredProductId === product._id &&
+                                product.images &&
+                                product.images.length > 0 &&
+                                product.stock > 0 && (
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col items-center justify-end gap-3 p-4 backdrop-blur-sm z-30">
+                                    <button
+                                      onClick={() => {
+                                        setQuickViewProduct(product);
+                                        setQuickViewImageIndex(0);
+                                        setQuickViewZoom(1);
+                                        setShowQuickView(true);
+                                        document.body.style.overflow = "hidden";
+                                      }}
+                                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:scale-105 active:scale-95"
+                                    >
+                                      <Eye className="w-5 h-5" />
+                                      Quick View
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        navigate(`/product/${product._id}`)
+                                      }
+                                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                                    >
+                                      <ShoppingCart className="w-5 h-5" />
+                                      View Details
+                                    </button>
+                                  </div>
+                                )}
                             </div>
-                            <span className="text-xs sm:text-sm text-gray-600">
-                              {product.rating.toFixed(1)} ({product.reviews}{" "}
-                              reviews)
-                            </span>
+
+                            {/* Content */}
+                            <div className="flex-1 p-3 sm:p-5 flex flex-col justify-between">
+                              {/* Title */}
+                              <div>
+                                <h3 className="text-xs sm:text-sm lg:text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-amber-600 transition-colors">
+                                  {product.name}
+                                </h3>
+                              </div>
+
+                              {/* Rating */}
+                              {product.rating && (
+                                <div className="mt-3">
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-1">
+                                      {[...Array(5)].map((_, i) => (
+                                        <Star
+                                          key={i}
+                                          className={`w-3 sm:w-4 h-3 sm:h-4 ${
+                                            i < Math.floor(product.rating)
+                                              ? "fill-amber-400 text-amber-400"
+                                              : "text-gray-300"
+                                          }`}
+                                        />
+                                      ))}
+                                    </div>
+                                    <span className="text-xs sm:text-sm text-gray-600">
+                                      {product.rating.toFixed(1)} (
+                                      {product.reviews} reviews)
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Price and Add to Cart - Modern Layout */}
+                              <div className="mt-4 space-y-3">
+                                {/* Price Section */}
+                                <div className="flex items-baseline gap-2">
+                                  <span className="text-xl sm:text-2xl font-bold text-amber-600">
+                                    ${product.price.toFixed(2)}
+                                  </span>
+                                </div>
+
+                                {/* Stock Status */}
+                                <div>
+                                  <span
+                                    className={`text-xs sm:text-sm font-semibold ${
+                                      product.stock > 0
+                                        ? "text-green-600"
+                                        : "text-red-600"
+                                    }`}
+                                  >
+                                    {product.stock > 0
+                                      ? `${product.stock} in stock`
+                                      : "Out of stock"}
+                                  </span>
+                                </div>
+
+                                {/* Add to Cart Button */}
+                                <button
+                                  disabled={product.stock === 0}
+                                  className="w-full p-2 sm:p-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold text-sm sm:text-base transition-all hover:scale-105 active:scale-95"
+                                >
+                                  <ShoppingCart className="w-4 sm:w-5 h-4 sm:h-5 inline mr-2" />
+                                  Add to Cart
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Bottom Accent */}
+                            <div className="h-0.5 bg-gradient-to-r from-amber-400 via-orange-500 to-transparent" />
                           </div>
-                        </div>
-                      )}
-
-                      {/* Price and Add to Cart - Modern Layout */}
-                      <div className="mt-4 space-y-3">
-                        {/* Price Section */}
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-xl sm:text-2xl font-bold text-amber-600">
-                            ${product.price.toFixed(2)}
-                          </span>
-                        </div>
-
-                        {/* Stock Status */}
-                        <div>
-                          <span
-                            className={`text-xs sm:text-sm font-semibold ${
-                              product.stock > 0
-                                ? "text-green-600"
-                                : "text-red-600"
-                            }`}
-                          >
-                            {product.stock > 0
-                              ? `${product.stock} in stock`
-                              : "Out of stock"}
-                          </span>
-                        </div>
-
-                        {/* Add to Cart Button */}
-                        <button
-                          disabled={product.stock === 0}
-                          className="w-full p-2 sm:p-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold text-sm sm:text-base transition-all hover:scale-105 active:scale-95"
-                        >
-                          <ShoppingCart className="w-4 sm:w-5 h-4 sm:h-5 inline mr-2" />
-                          Add to Cart
-                        </button>
-                      </div>
+                        </motion.div>
+                      ))}
                     </div>
 
-                    {/* Bottom Accent */}
-                    <div className="h-0.5 bg-gradient-to-r from-amber-400 via-orange-500 to-transparent" />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                    {/* Pagination Controls */}
+                    {totalPages > 1 && (
+                      <div className="flex justify-center items-center gap-2 sm:gap-4 mt-12 sm:mt-16 lg:mt-20">
+                        <button
+                          onClick={() => {
+                            setCurrentPage((prev) => Math.max(prev - 1, 1));
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          disabled={currentPage === 1}
+                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          ← Previous
+                        </button>
+
+                        <div className="flex gap-1 sm:gap-2">
+                          {[...Array(totalPages)].map((_, index) => (
+                            <button
+                              key={index + 1}
+                              onClick={() => {
+                                setCurrentPage(index + 1);
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                              }}
+                              className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all ${
+                                currentPage === index + 1
+                                  ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg"
+                                  : "bg-white text-gray-700 hover:bg-amber-100 border border-amber-200"
+                              }`}
+                            >
+                              {index + 1}
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            setCurrentPage((prev) =>
+                              Math.min(prev + 1, totalPages)
+                            );
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          disabled={currentPage === totalPages}
+                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Next →
+                        </button>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </>
           ) : !loading && products.length === 0 ? (
             <div className="text-center py-12 sm:py-16 lg:py-20">
               <p className="text-base sm:text-lg lg:text-2xl text-gray-500 mb-4 px-2 sm:px-0">

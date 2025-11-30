@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
 import { useCartStore } from "../store";
+import { WishlistButton } from "./WishlistButton";
 import { Eye, ShoppingCart } from "lucide-react";
 
 interface ProductCardProps {
@@ -129,6 +130,15 @@ const ProductCard = ({
             </div>
           </div>
         )}
+
+        {/* Wishlist Button */}
+        <WishlistButton
+          id={id}
+          name={name}
+          price={price}
+          image={image}
+          className="absolute top-3 left-3 z-20"
+        />
 
         {/* Stock Status Badge */}
         {!inStock && (

@@ -6,6 +6,7 @@ import ProductGrid, { Product } from "../components/ProductGrid";
 import SearchStats from "../components/SearchStats";
 import { Filter, ChevronRight, Sparkles, X, TrendingUp } from "lucide-react";
 import { apiClient } from "../services/api/client";
+import { useDebounce } from "../hooks/useDebounce";
 import {
   rankProducts,
   analyzeSearchResults,
@@ -158,7 +159,6 @@ const fetchSuggestions = async (): Promise<SearchSuggestion[]> => {
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number | undefined>();
   const [maxPrice, setMaxPrice] = useState<number | undefined>();
@@ -167,14 +167,8 @@ export default function Search() {
   const [searchAnalytics, setSearchAnalytics] = useState<any>(null);
   const [liveResults, setLiveResults] = useState<any[]>([]);
 
-  // Debounce search query - REDUCED to 100ms for real-time feel
-  useMemo(() => {
-    const timer = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+  // Debounce search query using custom hook - 300ms for optimal UX
+  const debouncedQuery = useDebounce(searchQuery, 300);
 
   // Fetch live results immediately as user types (without debounce)
   useEffect(() => {
