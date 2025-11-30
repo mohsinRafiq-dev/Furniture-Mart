@@ -162,8 +162,8 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
 
-      {/* Animated Particles/Sparkles - Reduced on Mobile & Respects Motion Preference */}
-      {!prefersReducedMotion &&
+      {/* Animated Particles/Sparkles - Hidden on Mobile & Respects Motion Preference */}
+      {!prefersReducedMotion && !isMobile &&
         [...Array(particleCount)].map((_, i) => (
           <motion.div
             key={i}

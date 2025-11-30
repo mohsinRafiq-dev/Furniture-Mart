@@ -392,8 +392,8 @@ const CategoryList = ({
           }}
         />
 
-        {/* Floating Accent Dots */}
-        {[...Array(8)].map((_, i) => (
+        {/* Floating Accent Dots - Hidden on Mobile */}
+        {typeof window !== "undefined" && window.innerWidth >= 640 && [...Array(8)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-amber-300 rounded-full opacity-40"
