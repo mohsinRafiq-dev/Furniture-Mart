@@ -393,25 +393,27 @@ const CategoryList = ({
         />
 
         {/* Floating Accent Dots - Hidden on Mobile */}
-        {typeof window !== "undefined" && window.innerWidth >= 640 && [...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-amber-300 rounded-full opacity-40"
-            style={{
-              left: `${20 + i * 10}%`,
-              top: `${30 + (i % 3) * 20}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: 4 + i * 0.5,
-              repeat: Infinity,
-              delay: i * 0.3,
-            }}
-          />
-        ))}
+        {typeof window !== "undefined" &&
+          window.innerWidth >= 640 &&
+          [...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-amber-300 rounded-full opacity-40"
+              style={{
+                left: `${20 + i * 10}%`,
+                top: `${30 + (i % 3) * 20}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.2, 0.6, 0.2],
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.3,
+              }}
+            />
+          ))}
 
         {/* Top Border Accent Line */}
         <motion.div
