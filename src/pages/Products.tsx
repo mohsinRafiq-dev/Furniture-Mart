@@ -40,17 +40,6 @@ export default function Products() {
   const [quickViewZoom, setQuickViewZoom] = useState(1);
 
   // Animation variants for product cards
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -90,19 +79,19 @@ export default function Products() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-amber-100/60 via-white to-orange-100/60 overflow-hidden">
       {/* Main Content */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="relative w-full py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60"
+        className="relative w-full py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8"
       >
         {/* Premium Animated Background Decorations */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Top Right Large Gradient Orb */}
           <motion.div
-            className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-b from-amber-400/60 via-amber-300/50 to-transparent rounded-full opacity-70 blur-3xl"
+            className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-b from-amber-300/40 via-amber-200/30 to-transparent rounded-full opacity-50 blur-3xl"
             animate={{
               x: [0, 30, 0],
               y: [0, 20, 0],
@@ -112,7 +101,7 @@ export default function Products() {
 
           {/* Bottom Left Large Gradient Orb */}
           <motion.div
-            className="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-tr from-amber-400/60 via-amber-300/50 to-transparent rounded-full opacity-65 blur-3xl"
+            className="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-tr from-orange-200/40 via-amber-100/30 to-transparent rounded-full opacity-45 blur-3xl"
             animate={{
               x: [0, -30, 0],
               y: [0, -20, 0],
@@ -127,25 +116,11 @@ export default function Products() {
 
           {/* Center Glow Effect */}
           <motion.div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-amber-300/50 via-amber-200/40 to-transparent rounded-full opacity-60 blur-3xl"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-amber-200/30 via-orange-100/20 to-transparent rounded-full opacity-40 blur-3xl"
             animate={{
               scale: [1, 1.1, 1],
             }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          {/* Top Border Accent Line */}
-          <motion.div
-            className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent opacity-40"
-            animate={{ opacity: [0.2, 0.6, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
-
-          {/* Bottom Border Accent Line */}
-          <motion.div
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-400 to-transparent opacity-40"
-            animate={{ opacity: [0.2, 0.6, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity, delay: 1 }}
           />
         </div>
 
@@ -156,7 +131,7 @@ export default function Products() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="mb-8 sm:mb-12 lg:mb-16 text-center space-y-3 sm:space-y-4"
+            className="mb-2 sm:mb-3 lg:mb-4 text-center space-y-1 sm:space-y-2"
           >
             {/* Premium Badge with Spinning Icon */}
             <motion.div
@@ -164,15 +139,15 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500/20 to-orange-500/20 border border-orange-400/50 rounded-full backdrop-blur-sm text-xs sm:text-sm"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/50 rounded-full backdrop-blur-sm text-xs sm:text-sm"
             >
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="w-4 h-4 text-orange-600" />
+                <Sparkles className="w-4 h-4 text-amber-600" />
               </motion.div>
-              <span className="text-orange-600 font-semibold text-sm uppercase tracking-widest">
+              <span className="text-amber-600 font-semibold text-sm uppercase tracking-widest">
                 Explore
               </span>
             </motion.div>
@@ -187,7 +162,7 @@ export default function Products() {
             >
               All{" "}
               <motion.span
-                className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600"
+                className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600"
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
@@ -215,7 +190,7 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
               viewport={{ once: true }}
-              className="text-xs sm:text-sm lg:text-base text-orange-600 font-semibold"
+              className="text-xs sm:text-sm lg:text-base text-amber-600 font-semibold"
             >
               {products.length} {products.length === 1 ? "Product" : "Products"}{" "}
               Available
@@ -258,7 +233,7 @@ export default function Products() {
       </motion.section>
 
       {/* Products Section */}
-      <section className="w-full pt-4 pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-6 lg:px-8">
+      <section className="w-full pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {error ? (
             <div className="text-center py-12 sm:py-16 lg:py-24">
@@ -276,16 +251,14 @@ export default function Products() {
               </button>
             </div>
           ) : products.length > 0 ? (
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {products.map((product) => (
                 <motion.div
                   key={product._id}
                   variants={itemVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "0px 0px -100px 0px" }}
                   onMouseEnter={() => setHoveredProductId(product._id)}
                   onMouseLeave={() => setHoveredProductId(null)}
                   className="group"
@@ -432,7 +405,7 @@ export default function Products() {
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           ) : !loading && products.length === 0 ? (
             <div className="text-center py-12 sm:py-16 lg:py-20">
               <p className="text-base sm:text-lg lg:text-2xl text-gray-500 mb-4 px-2 sm:px-0">

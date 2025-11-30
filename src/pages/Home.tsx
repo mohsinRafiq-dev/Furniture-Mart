@@ -4,7 +4,16 @@ import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import CategoryList from "../components/CategoryList";
 import ProductGrid from "../components/ProductGrid";
-import { ArrowRight, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Award,
+  Truck,
+} from "lucide-react";
 import { apiClient } from "../services/api/client";
 import { useSplash } from "../context/SplashContext";
 
@@ -28,6 +37,50 @@ const containerVariants = {
   },
 };
 
+// Mock testimonials data
+const testimonials = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    role: "Interior Designer",
+    content:
+      "The quality of furniture from Furniture Mart is exceptional. Every piece I've purchased has been delivered on time and in perfect condition. Highly recommend!",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
+  },
+  {
+    id: 2,
+    name: "Michael Chen",
+    role: "Home Owner",
+    content:
+      "Amazing selection and great prices. The customer service team helped me find the perfect sofa for my living room. Will definitely shop here again!",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+  },
+  {
+    id: 3,
+    name: "Emma Davis",
+    role: "Architect",
+    content:
+      "Best furniture store I've worked with. Their product range is diverse and the quality is consistently high. My clients love their purchases!",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+  },
+  {
+    id: 4,
+    name: "James Wilson",
+    role: "Business Owner",
+    content:
+      "Furnishing our office was seamless. Fast delivery, excellent build quality, and their team was very professional. Great investment!",
+    rating: 5,
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
+  },
+];
+
 export default function Home() {
   const navigate = useNavigate();
   const { splashComplete } = useSplash();
@@ -35,10 +88,19 @@ export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [loadingProducts, setLoadingProducts] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   useEffect(() => {
     fetchCategories();
     fetchProducts();
+  }, []);
+
+  // Auto-rotate testimonials
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   const fetchCategories = async () => {
@@ -105,6 +167,73 @@ export default function Home() {
         isLoading={loadingCategories}
         animationsReady={splashComplete}
       />
+
+      {/* Trust Section - Why Choose Us */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="relative py-8 sm:py-12 lg:py-16 px-3 sm:px-6 lg:px-8 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {/* Free Shipping */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="flex items-center gap-4 p-4 sm:p-6 rounded-xl bg-white/60 backdrop-blur-sm border border-amber-200/30 hover:border-amber-400/50 transition-all"
+            >
+              <div className="flex-shrink-0 p-3 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg">
+                <Truck className="w-6 h-6 text-amber-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+                  Free Shipping
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  On orders over $50
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Quality Guarantee */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="flex items-center gap-4 p-4 sm:p-6 rounded-xl bg-white/60 backdrop-blur-sm border border-amber-200/30 hover:border-amber-400/50 transition-all"
+            >
+              <div className="flex-shrink-0 p-3 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg">
+                <Award className="w-6 h-6 text-amber-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+                  Quality Guarantee
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  Premium materials guaranteed
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Easy Returns */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="flex items-center gap-4 p-4 sm:p-6 rounded-xl bg-white/60 backdrop-blur-sm border border-amber-200/30 hover:border-amber-400/50 transition-all"
+            >
+              <div className="flex-shrink-0 p-3 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg">
+                <Check className="w-6 h-6 text-amber-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+                  Easy Returns
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  30-day return policy
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
 
       {/* Featured Products Section */}
       <motion.section
@@ -243,13 +372,166 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Testimonials Section */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-amber-50/40 to-white"
+      >
+        {/* Background Orbs */}
+        <motion.div
+          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-amber-200/40 to-orange-200/20 rounded-full blur-3xl"
+          animate={{ y: [0, 50, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Header */}
+          <motion.div
+            variants={sectionHeaderVariants}
+            className="text-center mb-12 sm:mb-16 lg:mb-20"
+          >
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              >
+                <Star className="w-5 sm:w-6 h-5 sm:h-6 text-amber-500" />
+              </motion.div>
+              <span className="text-xs sm:text-sm font-semibold text-amber-600 uppercase tracking-widest">
+                Customer Love
+              </span>
+            </div>
+
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
+              What Our Customers Say
+            </h2>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
+              Join thousands of satisfied customers who have transformed their
+              spaces with our furniture
+            </p>
+          </motion.div>
+
+          {/* Testimonials Carousel */}
+          <div className="relative">
+            {/* Main Testimonial Card */}
+            <motion.div
+              key={currentTestimonial}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="bg-gradient-to-br from-white to-amber-50/50 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl border border-amber-200/30 backdrop-blur-sm"
+            >
+              {/* Star Rating */}
+              <div className="flex items-center gap-1 mb-4">
+                {[...Array(testimonials[currentTestimonial].rating)].map(
+                  (_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{
+                        delay: i * 0.1,
+                        type: "spring",
+                        stiffness: 100,
+                      }}
+                    >
+                      <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                    </motion.div>
+                  )
+                )}
+              </div>
+
+              {/* Testimonial Content */}
+              <p className="text-base sm:text-lg lg:text-xl text-gray-800 font-medium mb-6 sm:mb-8 leading-relaxed">
+                "{testimonials[currentTestimonial].content}"
+              </p>
+
+              {/* Customer Info */}
+              <div className="flex items-center gap-4">
+                <motion.img
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 100 }}
+                  src={testimonials[currentTestimonial].image}
+                  alt={testimonials[currentTestimonial].name}
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-amber-300"
+                />
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                    {testimonials[currentTestimonial].name}
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-600">
+                    {testimonials[currentTestimonial].role}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Navigation Buttons */}
+            <div className="flex items-center justify-between mt-6 sm:mt-8">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() =>
+                  setCurrentTestimonial(
+                    currentTestimonial === 0
+                      ? testimonials.length - 1
+                      : currentTestimonial - 1
+                  )
+                }
+                className="p-2 sm:p-3 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600 hover:shadow-lg transition-all"
+              >
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              </motion.button>
+
+              {/* Dots */}
+              <div className="flex gap-2">
+                {testimonials.map((_, index) => (
+                  <motion.button
+                    key={index}
+                    onClick={() => setCurrentTestimonial(index)}
+                    animate={{
+                      scale: currentTestimonial === index ? 1.2 : 1,
+                      backgroundColor:
+                        currentTestimonial === index
+                          ? "rgb(217, 119, 6)"
+                          : "rgb(253, 224, 71)",
+                    }}
+                    className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-amber-300 transition-all"
+                  />
+                ))}
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() =>
+                  setCurrentTestimonial(
+                    currentTestimonial === testimonials.length - 1
+                      ? 0
+                      : currentTestimonial + 1
+                  )
+                }
+                className="p-2 sm:p-3 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600 hover:shadow-lg transition-all"
+              >
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
       {/* Newsletter Section - Premium Gradient */}
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 overflow-hidden"
+        className="relative py-12 sm:py-16 lg:py-24 mb-20 sm:mb-28 lg:mb-40 px-3 sm:px-6 lg:px-8 overflow-hidden"
       >
         {/* Premium Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100" />
@@ -293,9 +575,13 @@ export default function Home() {
             viewport={{ once: true }}
             className="space-y-4 sm:space-y-6"
           >
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-amber-700 via-orange-600 to-amber-700 bg-clip-text text-transparent">
+            <motion.h3
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-amber-700 via-orange-600 to-amber-700 bg-clip-text text-transparent"
+            >
               Stay Updated with New Arrivals
-            </h3>
+            </motion.h3>
             <p className="text-sm sm:text-base lg:text-lg text-gray-700 font-medium">
               Subscribe to our newsletter and get exclusive offers, design tips,
               and early access to new collections.

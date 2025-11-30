@@ -472,39 +472,105 @@ export default function Categories() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-gradient-to-r from-amber-600 to-orange-600 py-12 sm:py-16 lg:py-20 px-3 sm:px-6 lg:px-8"
+          className="relative bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 overflow-hidden"
         >
-          <div className="max-w-7xl mx-auto text-center">
+          {/* Animated Background Orbs */}
+          <motion.div
+            className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-amber-200/40 to-orange-200/30 rounded-full blur-3xl"
+            animate={{ y: [0, 30, 0], x: [0, 20, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-orange-200/30 to-amber-200/30 rounded-full blur-3xl"
+            animate={{ y: [0, -30, 0], x: [0, -20, 0] }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+
+          <div className="max-w-7xl mx-auto text-center relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="inline-block mb-4 sm:mb-6"
+            >
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/50 rounded-full backdrop-blur-sm">
+                <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                <span className="text-xs sm:text-sm font-semibold text-amber-600 uppercase tracking-widest">
+                  Explore More
+                </span>
+              </div>
+            </motion.div>
+
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4"
+              className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight"
             >
-              Find Your Perfect Furniture
+              Find Your Perfect
+              <motion.span
+                className="block bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 bg-clip-text text-transparent"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+              >
+                Furniture
+              </motion.span>
             </motion.h2>
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="text-sm sm:text-lg lg:text-xl text-amber-50 mb-6 sm:mb-8 px-2 sm:px-0"
+              className="text-sm sm:text-lg lg:text-xl text-gray-700 mb-6 sm:mb-8 px-2 sm:px-0 max-w-2xl mx-auto font-medium"
             >
               Browse through our categories and discover pieces that match your
               style
             </motion.p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-white text-amber-600 font-bold text-sm sm:text-base rounded-lg hover:shadow-lg transition-shadow"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
             >
-              Start Shopping
-            </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative px-6 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl overflow-hidden transition-all shadow-lg hover:shadow-2xl"
+              >
+                {/* Shine Effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                />
+                <span className="relative flex items-center gap-2 justify-center">
+                  <span>Start Shopping</span>
+                  <motion.div className="group-hover:translate-x-1 transition-transform">
+                    →
+                  </motion.div>
+                </span>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 sm:px-10 py-3 sm:py-4 border-2 border-amber-600 text-amber-600 font-bold text-sm sm:text-base rounded-lg sm:rounded-xl hover:bg-amber-600/10 transition-all"
+              >
+                Browse Products
+              </motion.button>
+            </motion.div>
           </div>
         </motion.section>
       )}

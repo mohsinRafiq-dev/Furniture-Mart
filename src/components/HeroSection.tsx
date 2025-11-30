@@ -164,7 +164,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
       ))}
 
       {/* Background Image Indicators */}
-      <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
         {BACKGROUND_IMAGES.map((_, index) => (
           <motion.button
             key={index}
@@ -203,14 +203,14 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
         {/* Headline with Character Animation */}
         <motion.div variants={headlineVariants} className="mb-4 sm:mb-6">
           <h1 className="text-3xl sm:text-5xl lg:text-7xl xl:text-8xl font-bold text-white mb-2 sm:mb-4 leading-tight">
-            Transform Your
+            Find Your Perfect
             <motion.span
-              className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 pb-[10px]"
+              className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 pb-[10px]"
               animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
               transition={{ duration: 3, repeat: Infinity }}
               style={{ backgroundSize: "200% 200%" }}
             >
-              Living Space
+              Furniture
             </motion.span>
           </h1>
         </motion.div>
@@ -220,9 +220,9 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
           variants={itemVariants}
           className="mb-8 sm:mb-10 max-w-2xl mx-auto px-2 sm:px-0"
         >
-          <p className="text-xs sm:text-base lg:text-lg xl:text-2xl text-gray-300 leading-relaxed font-light">
-            Discover curated premium furniture and home decor that transforms
-            your house into a sanctuary of style and comfort.
+          <p className="text-xs sm:text-base lg:text-lg xl:text-2xl text-gray-200 leading-relaxed font-light">
+            Browse through our categories and discover pieces that match your
+            style
           </p>
         </motion.div>
 
@@ -231,7 +231,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
           variants={itemVariants}
           className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center mb-8 sm:mb-12"
         >
-          {/* Explore Collection Button */}
+          {/* Start Shopping Button */}
           <Link to="/categories">
             <motion.button
               whileHover="hover"
@@ -240,7 +240,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
             >
               {/* Animated Background Gradient */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700"
+                className="absolute inset-0 bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600"
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
@@ -279,10 +279,10 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
                   transition={{ type: "spring", stiffness: 400 }}
                   className="hidden sm:inline"
                 >
-                  🛋️
+                  🛍️
                 </motion.span>
-                <span className="hidden sm:inline">Explore Collection</span>
-                <span className="sm:hidden">Explore</span>
+                <span className="hidden sm:inline">Start Shopping</span>
+                <span className="sm:hidden">Shop Now</span>
                 <motion.div
                   variants={{
                     hover: { x: 5 },
@@ -300,7 +300,7 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
             <motion.button
               whileHover="hover"
               whileTap={{ scale: 0.92 }}
-              className="group relative px-6 sm:px-12 py-2.5 sm:py-4 text-sm sm:text-lg font-bold text-white overflow-hidden rounded-lg sm:rounded-xl border-2 border-white transition-all duration-300 backdrop-blur-md w-full sm:w-auto"
+              className="group relative px-6 sm:px-12 py-2.5 sm:py-4 text-sm sm:text-lg font-bold text-amber-600 overflow-hidden rounded-lg sm:rounded-xl border-2 border-amber-400 transition-all duration-300 backdrop-blur-md w-full sm:w-auto hover:bg-amber-400/10"
             >
               {/* Animated Border Glow */}
               <motion.div
@@ -418,19 +418,19 @@ const HeroSection = ({ animationsReady = true }: HeroSectionProps) => {
 
       {/* Enhanced Scroll Indicator */}
       <motion.div
-        animate={{ y: [0, 15, 0] }}
+        animate={{ y: [0, 12, 0] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-10 left-1/1 transform -translate-x-1/2 hidden md:block z-10 "
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex z-10"
       >
         <motion.div
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center gap-2"
+          className="flex flex-col items-center gap-1"
         >
           <span className="text-xs text-white/60 font-semibold tracking-widest">
             SCROLL
           </span>
-          <ChevronDown className="w-6 h-6 text-amber-400" />
+          <ChevronDown className="w-5 h-5 text-amber-400" />
         </motion.div>
       </motion.div>
     </div>
