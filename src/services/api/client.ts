@@ -2,7 +2,10 @@ import axios, { AxiosInstance, AxiosError } from "axios";
 
 const API_BASE_URL = 
   (import.meta.env.VITE_API_URL as string) ||
-  `${(import.meta.env.VITE_API_BASE_URL as string) || "http://localhost:5000"}/api`;
+  (import.meta.env.VITE_API_BASE_URL as string) ||
+  (import.meta.env.PROD 
+    ? "https://furniture-mart-backend-production.up.railway.app/api"  // Production fallback
+    : "http://localhost:5000/api"); // Development
 
 // Enable console logs only in development
 const isDev = import.meta.env.DEV;
@@ -12,6 +15,7 @@ const error = (...args: any[]) => isDev && console.error(...args);
 // Always log in production to debug
 console.log("[API Client DEBUG] VITE_API_URL env:", import.meta.env.VITE_API_URL);
 console.log("[API Client DEBUG] VITE_API_BASE_URL env:", import.meta.env.VITE_API_BASE_URL);
+console.log("[API Client DEBUG] Environment PROD:", import.meta.env.PROD);
 console.log("[API Client DEBUG] Final API_BASE_URL:", API_BASE_URL);
 
 class ApiClient {
