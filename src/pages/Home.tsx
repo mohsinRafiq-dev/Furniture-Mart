@@ -162,11 +162,13 @@ export default function Home() {
       <HeroSection animationsReady={splashComplete} />
 
       {/* Category List Section */}
-      <CategoryList
-        categories={categories}
-        isLoading={loadingCategories}
-        animationsReady={splashComplete}
-      />
+      <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
+        <CategoryList
+          categories={categories}
+          isLoading={loadingCategories}
+          animationsReady={splashComplete}
+        />
+      </div>
 
       {/* Trust Section - Why Choose Us */}
       <motion.section
@@ -174,7 +176,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="relative py-8 sm:py-12 lg:py-16 px-3 sm:px-6 lg:px-8 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50"
+        className="relative py-8 sm:py-12 lg:py-16 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100"
       >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
@@ -240,10 +242,10 @@ export default function Home() {
         variants={containerVariants}
         initial="hidden"
         animate={splashComplete ? "visible" : "hidden"}
-        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent via-amber-50/50 to-orange-50/30"
+        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100"
       >
         {/* Rich Background Decorations */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden hidden sm:block">
           {/* Top Right Accent */}
           <div className="absolute -top-60 -right-60 w-96 h-96 bg-gradient-to-b from-amber-200/60 via-amber-100/40 to-transparent rounded-full opacity-50 blur-3xl" />
 
@@ -378,11 +380,11 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-amber-50/40 to-white"
+        className="relative py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100"
       >
         {/* Background Orbs */}
         <motion.div
-          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-amber-200/40 to-orange-200/20 rounded-full blur-3xl"
+          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-amber-200/40 to-orange-200/20 rounded-full blur-3xl hidden sm:block"
           animate={{ y: [0, 50, 0] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -531,11 +533,8 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="relative py-12 sm:py-16 lg:py-24 mb-20 sm:mb-28 lg:mb-40 px-3 sm:px-6 lg:px-8 overflow-hidden"
+        className="relative py-12 sm:py-16 lg:py-24 mb-20 sm:mb-28 lg:mb-40 px-3 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100"
       >
-        {/* Premium Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100" />
-
         {/* Animated Pattern Overlay - Enhanced */}
         <motion.div
           className="absolute inset-0 opacity-30"
