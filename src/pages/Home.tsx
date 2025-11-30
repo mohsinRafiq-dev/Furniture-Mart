@@ -253,7 +253,7 @@ export default function Home() {
       >
         {/* Premium Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100" />
-        
+
         {/* Animated Pattern Overlay - Enhanced */}
         <motion.div
           className="absolute inset-0 opacity-30"
@@ -277,7 +277,12 @@ export default function Home() {
         <motion.div
           className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-orange-200/30 to-amber-200/30 rounded-full blur-3xl"
           animate={{ y: [0, -30, 0], x: [0, -20, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
         />
 
         <div className="max-w-4xl mx-auto relative z-10 text-center">
@@ -306,27 +311,30 @@ export default function Home() {
                 className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-lg text-sm sm:text-base text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-amber-50 transition-all shadow-lg"
               />
               <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(217,119,6,0.3)" }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(217,119,6,0.3)",
+                }}
                 whileTap={{ scale: 0.95 }}
                 className="group relative px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold text-white overflow-hidden rounded-lg whitespace-nowrap shadow-xl hover:shadow-2xl transition-all"
               >
                 {/* Gradient Background */}
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 rounded-lg" />
-                
+
                 {/* Hover Glow Effect */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-100 blur-lg -z-10 rounded-lg"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                 />
-                
+
                 {/* Shine Effect */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg"
                   animate={{ x: ["-100%", "100%"] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 0 }}
                 />
-                
+
                 <span className="relative">Subscribe</span>
               </motion.button>
             </motion.form>
