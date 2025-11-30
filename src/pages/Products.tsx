@@ -96,7 +96,7 @@ export default function Products() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="relative w-full py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 overflow-hidden"
+        className="relative w-full py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60"
       >
         {/* Premium Animated Background Decorations */}
         <div className="absolute inset-0 overflow-hidden">
@@ -156,7 +156,7 @@ export default function Products() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="mb-8 text-center space-y-4"
+            className="mb-8 sm:mb-12 lg:mb-16 text-center space-y-3 sm:space-y-4"
           >
             {/* Premium Badge with Spinning Icon */}
             <motion.div
@@ -164,7 +164,7 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500/20 to-orange-500/20 border border-orange-400/50 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500/20 to-orange-500/20 border border-orange-400/50 rounded-full backdrop-blur-sm text-xs sm:text-sm"
             >
               <motion.div
                 animate={{ rotate: 360 }}
@@ -183,7 +183,7 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
               viewport={{ once: true }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight"
+              className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight"
             >
               All{" "}
               <motion.span
@@ -204,7 +204,7 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
               viewport={{ once: true }}
-              className="text-lg text-gray-600 max-w-2xl mx-auto"
+              className="text-xs sm:text-base lg:text-lg text-gray-600 max-w-xl mx-auto px-2 sm:px-0"
             >
               Discover our complete collection of premium furniture pieces
             </motion.p>
@@ -215,7 +215,7 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
               viewport={{ once: true }}
-              className="text-orange-600 font-semibold"
+              className="text-xs sm:text-sm lg:text-base text-orange-600 font-semibold"
             >
               {products.length} {products.length === 1 ? "Product" : "Products"}{" "}
               Available
@@ -258,15 +258,19 @@ export default function Products() {
       </motion.section>
 
       {/* Products Section */}
-      <section className="w-full pt-4 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="w-full pt-4 pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {error ? (
-            <div className="text-center py-24">
-              <div className="text-6xl mb-4">⚠️</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">{error}</h3>
+            <div className="text-center py-12 sm:py-16 lg:py-24">
+              <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">
+                ⚠️
+              </div>
+              <h3 className="text-base sm:text-lg lg:text-2xl font-bold text-gray-900 mb-2 px-2 sm:px-0">
+                {error}
+              </h3>
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-600 text-white rounded-lg font-semibold text-sm sm:text-base hover:bg-orange-700 transition-colors"
               >
                 Try Again
               </button>
@@ -276,7 +280,7 @@ export default function Products() {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
             >
               {products.map((product) => (
                 <motion.div
@@ -288,7 +292,7 @@ export default function Products() {
                 >
                   <div className="h-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group hover:-translate-y-2">
                     {/* Image Container */}
-                    <div className="relative w-full h-64 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
+                    <div className="relative w-full h-40 sm:h-48 lg:h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
                       {product.images && product.images.length > 0 ? (
                         <img
                           src={product.images[0].url}
@@ -307,8 +311,8 @@ export default function Products() {
 
                       {/* Discount Badge */}
                       {product.discount && (
-                        <div className="absolute top-3 right-3 z-10">
-                          <div className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10">
+                          <div className="bg-red-500 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-bold">
                             -{product.discount}%
                           </div>
                         </div>
@@ -356,10 +360,10 @@ export default function Products() {
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 p-5 flex flex-col justify-between">
+                    <div className="flex-1 p-3 sm:p-5 flex flex-col justify-between">
                       {/* Title */}
                       <div>
-                        <h3 className="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-amber-600 transition-colors">
+                        <h3 className="text-xs sm:text-sm lg:text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-amber-600 transition-colors">
                           {product.name}
                         </h3>
                       </div>
@@ -372,7 +376,7 @@ export default function Products() {
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`w-4 h-4 ${
+                                  className={`w-3 sm:w-4 h-3 sm:h-4 ${
                                     i < Math.floor(product.rating)
                                       ? "fill-amber-400 text-amber-400"
                                       : "text-gray-300"
@@ -380,7 +384,7 @@ export default function Products() {
                                 />
                               ))}
                             </div>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-xs sm:text-sm text-gray-600">
                               {product.rating.toFixed(1)} ({product.reviews}{" "}
                               reviews)
                             </span>
@@ -392,7 +396,7 @@ export default function Products() {
                       <div className="mt-4 space-y-3">
                         {/* Price Section */}
                         <div className="flex items-baseline gap-2">
-                          <span className="text-2xl font-bold text-amber-600">
+                          <span className="text-xl sm:text-2xl font-bold text-amber-600">
                             ${product.price.toFixed(2)}
                           </span>
                         </div>
@@ -400,7 +404,7 @@ export default function Products() {
                         {/* Stock Status */}
                         <div>
                           <span
-                            className={`text-sm font-semibold ${
+                            className={`text-xs sm:text-sm font-semibold ${
                               product.stock > 0
                                 ? "text-green-600"
                                 : "text-red-600"
@@ -415,9 +419,9 @@ export default function Products() {
                         {/* Add to Cart Button */}
                         <button
                           disabled={product.stock === 0}
-                          className="w-full p-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all hover:scale-105 active:scale-95"
+                          className="w-full p-2 sm:p-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold text-sm sm:text-base transition-all hover:scale-105 active:scale-95"
                         >
-                          <ShoppingCart className="w-5 h-5 inline mr-2" />
+                          <ShoppingCart className="w-4 sm:w-5 h-4 sm:h-5 inline mr-2" />
                           Add to Cart
                         </button>
                       </div>
@@ -430,8 +434,10 @@ export default function Products() {
               ))}
             </motion.div>
           ) : !loading && products.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-2xl text-gray-500 mb-4">No products found</p>
+            <div className="text-center py-12 sm:py-16 lg:py-20">
+              <p className="text-base sm:text-lg lg:text-2xl text-gray-500 mb-4 px-2 sm:px-0">
+                No products found
+              </p>
             </div>
           ) : null}
         </div>

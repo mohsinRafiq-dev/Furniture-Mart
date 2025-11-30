@@ -63,17 +63,17 @@ export default function Checkout() {
   if (items.length === 0 && !orderSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="text-center px-2 sm:px-0">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Your Cart is Empty
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-6 sm:mb-8">
               Add some items before checking out
             </p>
             <button
               onClick={() => navigate("/")}
-              className="px-6 py-3 bg-amber-600 text-white font-bold rounded-lg hover:bg-amber-700 transition-colors"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-amber-600 text-white font-bold text-sm sm:text-base rounded-lg hover:bg-amber-700 transition-colors"
             >
               Continue Shopping
             </button>
@@ -90,19 +90,19 @@ export default function Checkout() {
         animate={{ opacity: 1, scale: 1 }}
         className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center"
       >
-        <div className="text-center max-w-md">
+        <div className="text-center max-w-md px-4 sm:px-6">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+            className="w-14 sm:w-16 h-14 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6"
           >
-            <Check className="w-8 h-8 text-green-600" />
+            <Check className="w-7 sm:w-8 h-7 sm:h-8 text-green-600" />
           </motion.div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Order Placed Successfully!
           </h1>
-          <p className="text-gray-600 mb-8">
+          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-6 sm:mb-8">
             Thank you for your purchase. Your order has been confirmed and will
             be shipped soon.
           </p>
@@ -111,7 +111,7 @@ export default function Checkout() {
               navigate("/");
               setOrderSuccess(false);
             }}
-            className="px-6 py-3 bg-amber-600 text-white font-bold rounded-lg hover:bg-amber-700 transition-colors"
+            className="px-6 sm:px-8 py-2.5 sm:py-3 bg-amber-600 text-white font-bold text-sm sm:text-base rounded-lg hover:bg-amber-700 transition-colors"
           >
             Back to Home
           </button>
@@ -139,25 +139,30 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-12">Checkout</h1>
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 sm:mb-12">
+          Checkout
+        </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Form Section */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-6 sm:space-y-8"
+            >
               {/* Personal Information */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <span className="bg-amber-100 text-amber-700 w-8 h-8 rounded-full flex items-center justify-center font-semibold">
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-200">
+                <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
+                  <span className="bg-amber-100 text-amber-700 w-7 sm:w-8 h-7 sm:h-8 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm">
                     1
                   </span>
                   Personal Information
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       First Name *
                     </label>
                     <input
@@ -170,22 +175,22 @@ export default function Checkout() {
                           message: "First name must be at least 2 characters",
                         },
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.firstName
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.firstName && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4 flex-shrink-0" />
                         {errors.firstName.message}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       Last Name *
                     </label>
                     <input
@@ -198,24 +203,24 @@ export default function Checkout() {
                           message: "Last name must be at least 2 characters",
                         },
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.lastName
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.lastName && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4 flex-shrink-0" />
                         {errors.lastName.message}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-3 sm:mt-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       Email *
                     </label>
                     <input
@@ -228,22 +233,22 @@ export default function Checkout() {
                           message: "Invalid email address",
                         },
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.email
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.email && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4 flex-shrink-0" />
                         {errors.email.message}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       Phone *
                     </label>
                     <input
@@ -256,15 +261,15 @@ export default function Checkout() {
                           message: "Invalid phone number",
                         },
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.phone
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.phone && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4 flex-shrink-0" />
                         {errors.phone.message}
                       </div>
                     )}
@@ -273,8 +278,8 @@ export default function Checkout() {
               </div>
 
               {/* Shipping Address */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-200">
+                <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
                   <span className="bg-amber-100 text-amber-700 w-8 h-8 rounded-full flex items-center justify-center font-semibold">
                     2
                   </span>
@@ -282,7 +287,7 @@ export default function Checkout() {
                 </h2>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                     Street Address *
                   </label>
                   <input
@@ -295,35 +300,35 @@ export default function Checkout() {
                         message: "Address must be at least 5 characters",
                       },
                     })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                    className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                       errors.address
                         ? "border-red-500 bg-red-50"
                         : "border-gray-300"
                     }`}
                   />
                   {errors.address && (
-                    <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4" />
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                      <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                       {errors.address.message}
                     </div>
                   )}
                 </div>
 
-                <div className="mt-4">
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <div className="mt-3 sm:mt-4">
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                     Apartment, Suite, etc. (Optional)
                   </label>
                   <input
                     type="text"
                     placeholder="Apt 4B"
                     {...register("apartment")}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors"
+                    className="w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-3 sm:mt-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       City *
                     </label>
                     <input
@@ -332,22 +337,22 @@ export default function Checkout() {
                       {...register("city", {
                         required: "City is required",
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.city
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.city && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                         {errors.city.message}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       State/Province *
                     </label>
                     <input
@@ -356,22 +361,22 @@ export default function Checkout() {
                       {...register("state", {
                         required: "State is required",
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.state
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.state && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                         {errors.state.message}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       ZIP/Postal Code *
                     </label>
                     <input
@@ -384,15 +389,15 @@ export default function Checkout() {
                           message: "Invalid ZIP code format",
                         },
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.zipCode
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.zipCode && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                         {errors.zipCode.message}
                       </div>
                     )}
@@ -401,8 +406,8 @@ export default function Checkout() {
               </div>
 
               {/* Payment Information */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-200">
+                <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
                   <span className="bg-amber-100 text-amber-700 w-8 h-8 rounded-full flex items-center justify-center font-semibold">
                     3
                   </span>
@@ -410,7 +415,7 @@ export default function Checkout() {
                 </h2>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                     Cardholder Name *
                   </label>
                   <input
@@ -419,22 +424,22 @@ export default function Checkout() {
                     {...register("cardName", {
                       required: "Cardholder name is required",
                     })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                    className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                       errors.cardName
                         ? "border-red-500 bg-red-50"
                         : "border-gray-300"
                     }`}
                   />
                   {errors.cardName && (
-                    <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4" />
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                      <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                       {errors.cardName.message}
                     </div>
                   )}
                 </div>
 
-                <div className="mt-4">
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <div className="mt-3 sm:mt-4">
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                     Card Number *
                   </label>
                   <input
@@ -448,23 +453,23 @@ export default function Checkout() {
                         message: "Invalid card number",
                       },
                     })}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                    className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                       errors.cardNumber
                         ? "border-red-500 bg-red-50"
                         : "border-gray-300"
                     }`}
                   />
                   {errors.cardNumber && (
-                    <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                      <AlertCircle className="w-4 h-4" />
+                    <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                      <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                       {errors.cardNumber.message}
                     </div>
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-3 sm:mt-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       Expiry Date *
                     </label>
                     <input
@@ -478,22 +483,22 @@ export default function Checkout() {
                           message: "Use MM/YY format",
                         },
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.cardExpiry
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.cardExpiry && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                         {errors.cardExpiry.message}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-1.5 sm:mb-2">
                       CVC *
                     </label>
                     <input
@@ -507,15 +512,15 @@ export default function Checkout() {
                           message: "Invalid CVC",
                         },
                       })}
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors ${
+                      className={`w-full px-2.5 sm:px-4 py-1.5 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors text-xs sm:text-sm ${
                         errors.cardCVC
                           ? "border-red-500 bg-red-50"
                           : "border-gray-300"
                       }`}
                     />
                     {errors.cardCVC && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 mt-1 text-red-600 text-xs sm:text-sm">
+                        <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                         {errors.cardCVC.message}
                       </div>
                     )}
@@ -524,16 +529,16 @@ export default function Checkout() {
               </div>
 
               {/* Terms and Conditions */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <label className="flex items-start gap-3 cursor-pointer">
+              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-200">
+                <label className="flex items-start gap-2 sm:gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     {...register("agreeTerms", {
                       required: "You must agree to the terms",
                     })}
-                    className="mt-1 w-4 h-4 text-amber-600 rounded focus:ring-2 focus:ring-amber-500"
+                    className="mt-1 w-4 h-4 text-amber-600 rounded focus:ring-2 focus:ring-amber-500 flex-shrink-0"
                   />
-                  <span className="text-sm text-gray-700">
+                  <span className="text-xs sm:text-sm text-gray-700">
                     I agree to the{" "}
                     <a href="#" className="text-amber-600 hover:underline">
                       Terms and Conditions
@@ -549,8 +554,8 @@ export default function Checkout() {
                   </span>
                 </label>
                 {errors.agreeTerms && (
-                  <div className="flex items-center gap-1 mt-2 text-red-600 text-sm">
-                    <AlertCircle className="w-4 h-4" />
+                  <div className="flex items-center gap-1 mt-2 text-red-600 text-xs sm:text-sm">
+                    <AlertCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                     {errors.agreeTerms.message}
                   </div>
                 )}
@@ -562,11 +567,11 @@ export default function Checkout() {
                 disabled={isSubmitting || !agreeTerms}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+                className="w-full py-2.5 sm:py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed text-sm sm:text-base"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-4 sm:w-5 h-4 sm:h-5 animate-spin" />
                     Processing...
                   </>
                 ) : (
@@ -581,33 +586,33 @@ export default function Checkout() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 sticky top-20"
+              className="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-200 sticky top-20"
             >
-              <h3 className="text-xl font-bold text-gray-900 mb-6">
+              <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
                 Order Summary
               </h3>
 
               {/* Items List */}
-              <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
+              <div className="space-y-3 mb-4 sm:mb-6 max-h-64 overflow-y-auto">
                 {items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-3 pb-4 border-b border-gray-200 last:border-b-0"
+                    className="flex items-center gap-2.5 sm:gap-3 pb-3 sm:pb-4 border-b border-gray-200 last:border-b-0"
                   >
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-12 h-12 object-cover rounded"
+                      className="w-10 sm:w-12 h-10 sm:h-12 object-cover rounded"
                     />
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900 text-sm line-clamp-1">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 text-xs sm:text-sm line-clamp-1">
                         {item.name}
                       </p>
                       <p className="text-gray-600 text-xs">
                         Qty: {item.quantity}
                       </p>
                     </div>
-                    <p className="font-semibold text-gray-900">
+                    <p className="font-semibold text-gray-900 text-xs sm:text-sm">
                       ${(item.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
@@ -615,13 +620,13 @@ export default function Checkout() {
               </div>
 
               {/* Price Breakdown */}
-              <div className="space-y-3 pt-6 border-t border-gray-200">
-                <div className="flex justify-between text-gray-700">
+              <div className="space-y-2 sm:space-y-3 pt-4 sm:pt-6 border-t border-gray-200">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-700">
                   <span>Subtotal</span>
                   <span>${totalPrice.toFixed(2)}</span>
                 </div>
 
-                <div className="flex justify-between text-gray-700">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-700">
                   <span>Shipping</span>
                   <span>
                     {shippingCost === 0 ? (
@@ -632,14 +637,14 @@ export default function Checkout() {
                   </span>
                 </div>
 
-                <div className="flex justify-between text-gray-700">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-700">
                   <span>Tax</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
 
                 <div className="h-px bg-gray-200" />
 
-                <div className="flex justify-between text-lg font-bold text-gray-900">
+                <div className="flex justify-between text-base sm:text-lg font-bold text-gray-900">
                   <span>Total</span>
                   <span className="text-amber-600">
                     ${grandTotal.toFixed(2)}
@@ -647,8 +652,8 @@ export default function Checkout() {
                 </div>
 
                 {totalPrice > 100 && (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-4">
-                    <p className="text-sm text-green-700 font-semibold">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-2.5 sm:p-3 mt-3 sm:mt-4">
+                    <p className="text-xs sm:text-sm text-green-700 font-semibold">
                       ✓ Free Shipping Applied!
                     </p>
                     <p className="text-xs text-green-600">

@@ -18,6 +18,7 @@ export default function Categories() {
     try {
       setLoading(true);
       const response = await apiClient.get("/categories");
+      // The API returns: { success: true, message: "...", data: { categories: [...] } }
       const apiCategories = response.data?.data?.categories || [];
       setCategories(Array.isArray(apiCategories) ? apiCategories : []);
     } catch (error) {
@@ -52,13 +53,13 @@ export default function Categories() {
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden">
+    <div className="min-h-screen bg-white">
       {/* Main Content */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="relative w-full py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60 overflow-hidden"
+        className="relative w-full py-12 sm:py-16 lg:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50/80 via-white to-orange-50/60"
       >
         {/* Premium Animated Background Decorations */}
         <div className="absolute inset-0 overflow-hidden">
@@ -171,7 +172,7 @@ export default function Categories() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="mb-16 text-center space-y-4"
+            className="mb-8 sm:mb-12 lg:mb-16 text-center space-y-3 sm:space-y-4"
           >
             {/* Premium Badge */}
             <motion.div
@@ -179,13 +180,13 @@ export default function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/50 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/50 rounded-full backdrop-blur-sm text-xs sm:text-sm"
             >
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="w-4 h-4 text-amber-600" />
+                <Sparkles className="w-3 sm:w-4 h-3 sm:h-4 text-amber-600" />
               </motion.div>
               <span className="text-amber-600 font-semibold text-sm uppercase tracking-widest">
                 Explore
@@ -198,7 +199,7 @@ export default function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
               viewport={{ once: true }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight whitespace-nowrap"
+              className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight"
             >
               All{" "}
               <motion.span
@@ -219,7 +220,7 @@ export default function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
               viewport={{ once: true }}
-              className="text-lg text-gray-600 max-w-xl mx-auto"
+              className="text-xs sm:text-base lg:text-lg text-gray-600 max-w-xl mx-auto px-2 sm:px-0"
             >
               Discover our complete range of curated furniture collections
               tailored to transform every room in your home
@@ -256,13 +257,7 @@ export default function Categories() {
               </motion.p>
             </motion.div>
           ) : (
-            <motion.div
-              key={`grid-${categories.length}`}
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-3 sm:px-6 lg:px-8 w-full">
               {categories.length > 0 ? (
                 categories.map((category, index) => (
                   <motion.div
@@ -285,7 +280,7 @@ export default function Categories() {
                       className="h-full bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all cursor-pointer flex flex-col border border-amber-100/50"
                     >
                       {/* Image Container with Overlay */}
-                      <div className="relative w-full h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                      <div className="relative w-full h-40 sm:h-48 lg:h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
                         {/* Background Gradient */}
                         <div className="absolute inset-0 bg-gradient-to-br from-amber-100/20 to-orange-100/20 z-10" />
 
@@ -307,7 +302,9 @@ export default function Categories() {
                             transition={{ duration: 0.4 }}
                           />
                         ) : (
-                          <div className="text-6xl relative z-20">🛋️</div>
+                          <div className="text-4xl sm:text-5xl lg:text-6xl relative z-20">
+                            🛋️
+                          </div>
                         )}
 
                         {/* Blur Overlay on Hover */}
@@ -324,12 +321,12 @@ export default function Categories() {
                                 initial={{ y: 10, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.1 }}
-                                className="text-center"
+                                className="text-center px-2"
                               >
-                                <p className="text-white text-lg font-bold flex items-center gap-2 justify-center">
+                                <p className="text-white text-sm sm:text-lg font-bold flex items-center gap-1 sm:gap-2 justify-center flex-wrap">
                                   Explore
                                   <motion.svg
-                                    className="w-5 h-5"
+                                    className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -347,7 +344,7 @@ export default function Categories() {
                                     />
                                   </motion.svg>
                                 </p>
-                                <p className="text-amber-300 text-sm font-semibold mt-1">
+                                <p className="text-amber-300 text-xs sm:text-sm font-semibold mt-1">
                                   Browse collection →
                                 </p>
                               </motion.div>
@@ -364,20 +361,20 @@ export default function Categories() {
                       </div>
 
                       {/* Content Container */}
-                      <div className="px-6 py-5 flex-1 flex flex-col bg-white">
+                      <div className="px-3 sm:px-6 py-4 sm:py-5 flex-1 flex flex-col bg-white">
                         <motion.div
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.1 }}
                           viewport={{ once: true }}
                         >
-                          <h3 className="text-xl font-bold text-gray-900 mb-3">
+                          <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
                             {category.name}
                           </h3>
                         </motion.div>
 
                         {category.description && (
-                          <p className="text-gray-600 text-sm mb-4 flex-1 line-clamp-2">
+                          <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 flex-1 line-clamp-2">
                             {category.description}
                           </p>
                         )}
@@ -392,11 +389,11 @@ export default function Categories() {
                             boxShadow: "0 8px 16px rgba(217, 119, 6, 0.2)",
                           }}
                           viewport={{ once: true }}
-                          className="inline-flex items-center gap-2 mt-auto w-full px-4 py-3 bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded-lg border border-amber-200/50 cursor-pointer transition-all"
+                          className="inline-flex items-center gap-2 mt-auto w-full px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded-lg border border-amber-200/50 cursor-pointer transition-all flex-wrap"
                         >
                           {/* Animated Count Number */}
                           <motion.span
-                            className="text-amber-600 font-bold text-base tabular-nums"
+                            className="text-amber-600 font-bold text-sm sm:text-base tabular-nums"
                             animate={{
                               scale: [1, 1.15, 1],
                               color: [
@@ -413,12 +410,12 @@ export default function Categories() {
                           >
                             {category.productCount || 0}
                           </motion.span>
-                          <span className="text-gray-700 text-sm font-medium">
+                          <span className="text-gray-700 text-xs sm:text-sm font-medium">
                             Products
                           </span>
                           {/* Animated Arrow */}
                           <motion.svg
-                            className="w-4 h-4 text-amber-600 ml-auto"
+                            className="w-3 sm:w-4 h-3 sm:h-4 text-amber-600 ml-auto flex-shrink-0"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -446,24 +443,24 @@ export default function Categories() {
                   animate={{ opacity: 1, y: 0 }}
                   className="col-span-full"
                 >
-                  <div className="text-center py-20 bg-gradient-to-br from-gray-50 to-amber-50/50 rounded-2xl">
+                  <div className="text-center py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-amber-50/50 rounded-2xl mx-2 sm:mx-0">
                     <motion.div
                       animate={{ y: [0, -10, 0] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="text-6xl mb-4"
+                      className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4"
                     >
                       📦
                     </motion.div>
-                    <p className="text-xl text-gray-500 font-medium">
+                    <p className="text-base sm:text-lg lg:text-xl text-gray-500 font-medium px-2 sm:px-0">
                       No categories available
                     </p>
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-xs sm:text-sm text-gray-400 mt-2 px-2 sm:px-0">
                       Check back soon for our amazing collection
                     </p>
                   </div>
                 </motion.div>
               )}
-            </motion.div>
+            </div>
           )}
         </div>
       </motion.section>
@@ -475,7 +472,7 @@ export default function Categories() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-gradient-to-r from-amber-600 to-orange-600 py-16 px-4"
+          className="bg-gradient-to-r from-amber-600 to-orange-600 py-12 sm:py-16 lg:py-20 px-3 sm:px-6 lg:px-8"
         >
           <div className="max-w-7xl mx-auto text-center">
             <motion.h2
@@ -483,7 +480,7 @@ export default function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-4xl font-bold text-white mb-4"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4"
             >
               Find Your Perfect Furniture
             </motion.h2>
@@ -492,7 +489,7 @@ export default function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="text-xl text-amber-50 mb-8"
+              className="text-sm sm:text-lg lg:text-xl text-amber-50 mb-6 sm:mb-8 px-2 sm:px-0"
             >
               Browse through our categories and discover pieces that match your
               style
@@ -504,7 +501,7 @@ export default function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="px-8 py-3 bg-white text-amber-600 font-bold rounded-lg hover:shadow-lg transition-shadow"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-white text-amber-600 font-bold text-sm sm:text-base rounded-lg hover:shadow-lg transition-shadow"
             >
               Start Shopping
             </motion.button>

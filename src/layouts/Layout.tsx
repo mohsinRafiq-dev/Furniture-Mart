@@ -3,7 +3,19 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import CartDrawer from "../components/CartDrawer";
 import { useCartStore } from "../store/cartStore";
-import { Phone, Mail, Clock, Facebook, Instagram, Twitter } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  Clock,
+  Facebook,
+  Instagram,
+  Twitter,
+  Home,
+  Package,
+  LayoutGrid,
+  Search,
+  Info,
+} from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -54,21 +66,22 @@ function Header({
   onCartClick,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 bg-gradient-to-r from-white via-white to-amber-50 shadow-lg border-b-2 border-amber-100">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 backdrop-blur-md bg-white/80 shadow-xl border-b border-amber-100/30">
+      <div className="absolute inset-0 bg-gradient-to-r from-amber-50/20 via-white/10 to-orange-50/20 pointer-events-none" />
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Desktop Header */}
         <div className="hidden sm:flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0 group">
             <Link
               to="/"
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+              className="flex items-center gap-3 hover:opacity-90 transition-opacity"
             >
               <div className="relative w-12 h-12 transform group-hover:scale-110 transition-transform duration-300">
                 {/* Premium Ashraf Furnitures Logo */}
                 <svg
                   viewBox="0 0 48 48"
-                  className="w-full h-full"
+                  className="w-full h-full drop-shadow-lg"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <defs>
@@ -158,54 +171,62 @@ function Header({
                   </g>
                 </svg>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent hover:from-amber-700 hover:to-amber-800 transition-all">
-                Ashraf Furnitures
-              </span>
+              <div className="flex flex-col gap-0">
+                <span className="text-xl font-bold bg-gradient-to-r from-amber-600 via-amber-700 to-orange-600 bg-clip-text text-transparent hover:from-amber-700 hover:via-amber-800 hover:to-orange-700 transition-all">
+                  Ashraf Furnitures
+                </span>
+                <span className="text-xs text-amber-600/70 font-medium tracking-wide">
+                  Premium Furniture
+                </span>
+              </div>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
-            <Link
-              to="/"
-              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
-            >
-              Home
-            </Link>
-            <Link
-              to="/products"
-              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
-            >
-              Products
-            </Link>
-            <Link
-              to="/categories"
-              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
-            >
-              Categories
-            </Link>
-            <Link
-              to="/search"
-              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
-            >
-              Search
-            </Link>
-            <Link
-              to="/about"
-              className="px-4 py-2 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 font-medium"
-            >
-              About
-            </Link>
+          {/* Desktop Navigation - Premium Style */}
+          <div className="hidden md:flex items-center gap-0.5">
+            {[
+              { to: "/", label: "Home", icon: Home },
+              { to: "/products", label: "Products", icon: Package },
+              { to: "/categories", label: "Categories", icon: LayoutGrid },
+              { to: "/search", label: "Search", icon: Search },
+              { to: "/about", label: "About", icon: Info },
+            ].map(({ to, label, icon: Icon }) => (
+              <motion.div
+                key={to}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to={to}
+                  className="group relative px-3.5 py-2 text-sm font-semibold text-gray-700 transition-all duration-200 flex items-center gap-2"
+                >
+                  <Icon className="w-4 h-4 text-amber-600 group-hover:text-amber-700 transition-colors" />
+                  <span className="group-hover:text-amber-600 transition-colors">
+                    {label}
+                  </span>
+
+                  {/* Animated underline */}
+                  <span className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 w-full" />
+
+                  {/* Background glow on hover */}
+                  <span className="absolute inset-0 bg-gradient-to-r from-amber-100/40 to-orange-100/40 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10" />
+                </Link>
+              </motion.div>
+            ))}
           </div>
 
           {/* Cart and Mobile Menu Button */}
-          <div className="flex items-center gap-3">
-            <button
+          <div className="flex items-center gap-2">
+            {/* Cart Button - Premium Style */}
+            <motion.button
               onClick={onCartClick}
-              className="relative p-3 text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-200 group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative p-2.5 text-gray-700 group transition-all duration-200"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-100/30 to-orange-100/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               <svg
-                className="w-6 h-6 group-hover:scale-110 transition-transform"
+                className="w-6 h-6 text-amber-600 group-hover:text-amber-700 transition-colors relative z-10"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -218,19 +239,26 @@ function Header({
                 />
               </svg>
               {cartItems > 0 && (
-                <span className="absolute top-1 right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-gradient-to-r from-red-500 to-red-600 rounded-full shadow-lg animate-pulse">
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center w-5 h-5 text-xs font-bold leading-none text-white bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg"
+                >
                   {cartItems}
-                </span>
+                </motion.span>
               )}
-            </button>
+            </motion.button>
 
             {/* Mobile Menu Button */}
-            <button
+            <motion.button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden inline-flex items-center justify-center p-3 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-50 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="md:hidden p-2.5 text-gray-700 group transition-all duration-200"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-100/30 to-orange-100/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               <svg
-                className="h-6 w-6"
+                className="h-6 w-6 text-amber-600 group-hover:text-amber-700 transition-colors relative z-10"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -251,7 +279,7 @@ function Header({
                   />
                 )}
               </svg>
-            </button>
+            </motion.button>
           </div>
         </div>
 
@@ -412,77 +440,77 @@ function Header({
         {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="sm:hidden pb-3 border-t-2 border-amber-200 bg-gradient-to-b from-white via-amber-50/50 to-orange-50 relative overflow-hidden"
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="sm:hidden pb-4 border-t-2 border-amber-200 bg-gradient-to-b from-white via-amber-50 to-orange-50"
           >
-            {/* Animated Background Blobs */}
-            <motion.div
-              className="absolute inset-0 opacity-30"
-              animate={{ y: [0, 20, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <div className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-br from-amber-400/20 to-transparent rounded-full blur-2xl" />
-            </motion.div>
-
-            <motion.div
-              className="absolute inset-0 opacity-20"
-              animate={{ y: [0, -15, 0] }}
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5,
-              }}
-            >
-              <div className="absolute top-10 -right-16 w-48 h-48 bg-gradient-to-bl from-orange-300/20 to-transparent rounded-full blur-3xl" />
-            </motion.div>
-
-            <motion.div
-              className="absolute inset-0 opacity-25"
-              animate={{ x: [0, 10, -5, 0] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 w-36 h-36 bg-gradient-to-t from-amber-300/15 to-transparent rounded-full blur-2xl" />
-            </motion.div>
-
-            {/* Menu Items Container - relative z-10 */}
-            <div className="relative z-10">
+            {/* Menu Items */}
+            <div className="space-y-1 px-2">
+              {/* Home Link */}
               <Link
                 to="/"
-                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-100 transition-all duration-200 group"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                🏠 Home
+                <div className="p-2.5 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 group-hover:from-amber-200 group-hover:to-orange-200 transition-all">
+                  <Home className="w-5 h-5 text-amber-600 group-hover:text-amber-700" />
+                </div>
+                <span className="font-semibold text-sm">Home</span>
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
+
+              {/* Products Link */}
               <Link
                 to="/products"
-                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-100 transition-all duration-200 group"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                🛋️ Products
+                <div className="p-2.5 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 group-hover:from-amber-200 group-hover:to-orange-200 transition-all">
+                  <Package className="w-5 h-5 text-amber-600 group-hover:text-amber-700" />
+                </div>
+                <span className="font-semibold text-sm">Products</span>
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
+
+              {/* Categories Link */}
               <Link
                 to="/categories"
-                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-100 transition-all duration-200 group"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                📁 Categories
+                <div className="p-2.5 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 group-hover:from-amber-200 group-hover:to-orange-200 transition-all">
+                  <LayoutGrid className="w-5 h-5 text-amber-600 group-hover:text-amber-700" />
+                </div>
+                <span className="font-semibold text-sm">Categories</span>
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
+
+              {/* Search Link */}
               <Link
                 to="/search"
-                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-100 transition-all duration-200 group"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                🔍 Search
+                <div className="p-2.5 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 group-hover:from-amber-200 group-hover:to-orange-200 transition-all">
+                  <Search className="w-5 h-5 text-amber-600 group-hover:text-amber-700" />
+                </div>
+                <span className="font-semibold text-sm">Search</span>
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
+
+              {/* About Link */}
               <Link
                 to="/about"
-                className="block px-4 py-3 rounded-md text-base font-semibold text-gray-700 hover:text-amber-600 hover:bg-amber-100/50 border-l-4 border-transparent hover:border-amber-600 transition-all"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:text-amber-600 hover:bg-amber-100 transition-all duration-200 group"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                ℹ️ About
+                <div className="p-2.5 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 group-hover:from-amber-200 group-hover:to-orange-200 transition-all">
+                  <Info className="w-5 h-5 text-amber-600 group-hover:text-amber-700" />
+                </div>
+                <span className="font-semibold text-sm">About</span>
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             </div>
           </motion.div>
@@ -516,17 +544,18 @@ function Footer() {
   };
 
   return (
-    <footer className="relative bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white mt-20 border-t-2 border-amber-500/30 overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden opacity-40">
+    <footer className="relative mt-20 overflow-hidden">
+      {/* Premium Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
+        {/* Animated floating elements */}
         <motion.div
-          className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-b from-amber-600/30 to-transparent rounded-full blur-3xl"
-          animate={{ y: [0, 30, 0] }}
+          className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-amber-200/40 to-orange-200/40 rounded-full blur-3xl"
+          animate={{ y: [0, 30, 0], x: [0, 20, 0] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-t from-orange-600/20 to-transparent rounded-full blur-3xl"
-          animate={{ y: [0, -30, 0] }}
+          className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-orange-200/30 to-amber-200/30 rounded-full blur-3xl"
+          animate={{ y: [0, -30, 0], x: [0, -20, 0] }}
           transition={{
             duration: 10,
             repeat: Infinity,
@@ -547,10 +576,10 @@ function Footer() {
         >
           {/* About */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+            <h3 className="text-xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 bg-clip-text text-transparent">
               About Ashraf
             </h3>
-            <p className="text-gray-300 text-sm leading-relaxed max-w-xs">
+            <p className="text-gray-700 text-sm leading-relaxed max-w-xs font-medium">
               Your trusted destination for premium furniture and home décor. We
               craft spaces into sanctuaries of style and comfort.
             </p>
@@ -560,84 +589,84 @@ function Footer() {
                 whileHover={{ scale: 1.2, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
                 href="#"
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center hover:shadow-lg hover:shadow-amber-500/50 transition-shadow"
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center hover:shadow-lg hover:shadow-amber-500/50 transition-shadow text-white"
               >
-                <Facebook className="w-5 h-5 text-white" />
+                <Facebook className="w-5 h-5" />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.2, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
                 href="#"
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center hover:shadow-lg hover:shadow-amber-500/50 transition-shadow"
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center hover:shadow-lg hover:shadow-amber-500/50 transition-shadow text-white"
               >
-                <Instagram className="w-5 h-5 text-white" />
+                <Instagram className="w-5 h-5" />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.2, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
                 href="#"
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center hover:shadow-lg hover:shadow-amber-500/50 transition-shadow"
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center hover:shadow-lg hover:shadow-amber-500/50 transition-shadow text-white"
               >
-                <Twitter className="w-5 h-5 text-white" />
+                <Twitter className="w-5 h-5" />
               </motion.a>
             </div>
           </motion.div>
 
           {/* Quick Links */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-xl font-bold text-amber-400">Quick Links</h3>
+            <h3 className="text-xl font-bold text-amber-700">Quick Links</h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   to="/"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Home
                 </Link>
               </li>
               <li>
                 <Link
                   to="/products"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Products
                 </Link>
               </li>
               <li>
                 <Link
                   to="/categories"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Categories
                 </Link>
               </li>
               <li>
                 <Link
                   to="/search"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Search
                 </Link>
               </li>
               <li>
                 <Link
                   to="/about"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   About
                 </Link>
               </li>
               <li>
                 <Link
                   to="/cart"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Cart
                 </Link>
               </li>
@@ -646,41 +675,41 @@ function Footer() {
 
           {/* Support */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-xl font-bold text-amber-400">Support</h3>
+            <h3 className="text-xl font-bold text-amber-700">Support</h3>
             <ul className="space-y-3">
               <li>
                 <a
                   href="#"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Contact Us
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Shipping Info
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   Returns
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="text-gray-300 hover:text-amber-400 transition flex items-center gap-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-amber-600 transition flex items-center gap-2 text-sm font-semibold group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 group-hover:scale-125 transition-transform" />
                   FAQ
                 </a>
               </li>
@@ -689,27 +718,27 @@ function Footer() {
 
           {/* Contact */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-xl font-bold text-amber-400">Contact</h3>
+            <h3 className="text-xl font-bold text-amber-700">Contact</h3>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-3 text-gray-300 hover:text-amber-400 transition">
-                <Mail className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
+              <li className="flex items-start gap-3 text-gray-700 hover:text-amber-600 transition group">
+                <Mail className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-600 group-hover:text-orange-600 transition-colors" />
                 <div>
-                  <p className="font-medium">Email</p>
-                  <p>info@ashraff.com</p>
+                  <p className="font-semibold">Email</p>
+                  <p className="font-medium">info@ashraff.com</p>
                 </div>
               </li>
-              <li className="flex items-start gap-3 text-gray-300 hover:text-amber-400 transition">
-                <Phone className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
+              <li className="flex items-start gap-3 text-gray-700 hover:text-amber-600 transition group">
+                <Phone className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-600 group-hover:text-orange-600 transition-colors" />
                 <div>
-                  <p className="font-medium">Phone</p>
-                  <p>1-800-FURNITURE</p>
+                  <p className="font-semibold">Phone</p>
+                  <p className="font-medium">1-800-FURNITURE</p>
                 </div>
               </li>
-              <li className="flex items-start gap-3 text-gray-300">
-                <Clock className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-500" />
+              <li className="flex items-start gap-3 text-gray-700 group">
+                <Clock className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-600 group-hover:text-orange-600 transition-colors" />
                 <div>
-                  <p className="font-medium">Hours</p>
-                  <p>24/7 Service</p>
+                  <p className="font-semibold">Hours</p>
+                  <p className="font-medium">24/7 Service</p>
                 </div>
               </li>
             </ul>
@@ -722,7 +751,7 @@ function Footer() {
           whileInView={{ scaleX: 1, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
           viewport={{ once: true }}
-          className="border-t border-gradient-to-r from-transparent via-amber-500/50 to-transparent py-8 origin-center"
+          className="border-t border-gradient-to-r from-transparent via-amber-400 to-transparent py-8 origin-center"
         />
 
         {/* Bottom Section */}
@@ -735,11 +764,13 @@ function Footer() {
         >
           <motion.p
             variants={itemVariants}
-            className="text-gray-400 text-sm font-medium"
+            className="text-gray-700 text-sm font-semibold"
           >
             &copy; {currentYear}{" "}
-            <span className="text-amber-400">Ashraf Furnitures</span>. All
-            rights reserved.
+            <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent font-bold">
+              Ashraf Furnitures
+            </span>
+            . All rights reserved.
           </motion.p>
           <motion.div
             variants={itemVariants}
@@ -747,19 +778,19 @@ function Footer() {
           >
             <a
               href="#"
-              className="text-gray-400 hover:text-amber-400 transition text-sm font-medium"
+              className="text-gray-700 hover:text-amber-600 transition text-sm font-semibold"
             >
               Privacy Policy
             </a>
             <a
               href="#"
-              className="text-gray-400 hover:text-amber-400 transition text-sm font-medium"
+              className="text-gray-700 hover:text-amber-600 transition text-sm font-semibold"
             >
               Terms of Service
             </a>
             <a
               href="#"
-              className="text-gray-400 hover:text-amber-400 transition text-sm font-medium"
+              className="text-gray-700 hover:text-amber-600 transition text-sm font-semibold"
             >
               Cookie Policy
             </a>
@@ -772,9 +803,9 @@ function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.6 }}
           viewport={{ once: true }}
-          className="mt-8 pt-8 border-t border-gray-700 text-center"
+          className="mt-8 pt-8 border-t border-amber-300 text-center"
         >
-          <p className="text-gray-400 text-sm italic">
+          <p className="text-gray-700 text-sm italic font-medium bg-gradient-to-r from-amber-700 via-orange-600 to-amber-700 bg-clip-text text-transparent">
             Transforming houses into homes with premium furniture and
             exceptional service
           </p>

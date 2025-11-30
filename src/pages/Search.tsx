@@ -312,32 +312,32 @@ export default function Search() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50/50 via-white to-orange-50/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         {/* Animated Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          className="mb-8 sm:mb-12 lg:mb-16 text-center"
         >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="flex items-center justify-center gap-2 mb-4"
+            className="flex items-center justify-center gap-1.5 sm:gap-2 mb-3 sm:mb-4 flex-wrap"
           >
-            <Sparkles className="w-5 h-5 text-amber-500" />
-            <span className="text-sm font-semibold text-amber-600 uppercase tracking-widest">
+            <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-amber-500 flex-shrink-0" />
+            <span className="text-xs sm:text-sm font-semibold text-amber-600 uppercase tracking-widest">
               Find Your Perfect Match
             </span>
-            <Sparkles className="w-5 h-5 text-amber-500" />
+            <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-amber-500 flex-shrink-0" />
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight"
+            className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2 sm:px-0"
           >
             Discover Your Ideal
             <motion.span
@@ -354,7 +354,7 @@ export default function Search() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            className="text-xs sm:text-base lg:text-lg xl:text-xl text-gray-600 max-w-2xl mx-auto px-2 sm:px-4"
           >
             Explore our extensive collection of premium furniture and home decor
             pieces
@@ -366,7 +366,7 @@ export default function Search() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="mb-12"
+          className="mb-8 sm:mb-12 lg:mb-16"
         >
           <SearchInput
             value={searchQuery || selectedCategory}
@@ -386,15 +386,20 @@ export default function Search() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-amber-200 rounded-lg hover:border-amber-500 transition-all"
+              className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-white border-2 border-amber-200 rounded-lg hover:border-amber-500 transition-all text-sm sm:text-base"
             >
-              <Filter className="w-4 h-4 text-amber-600" />
-              <span className="font-semibold text-gray-700">Filters</span>
+              <Filter className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-amber-600 flex-shrink-0" />
+              <span className="font-semibold text-gray-700 hidden sm:inline">
+                Filters
+              </span>
+              <span className="font-semibold text-gray-700 sm:hidden">
+                Filter
+              </span>
               {hasActiveFilters && (
                 <motion.span
                   initial={{ scale: 0 }}
@@ -414,10 +419,11 @@ export default function Search() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 onClick={clearFilters}
-                className="flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium"
+                className="flex items-center gap-1 sm:gap-2 text-amber-600 hover:text-amber-700 font-medium text-xs sm:text-sm"
               >
-                <X className="w-4 h-4" />
-                Clear filters
+                <X className="w-3.5 sm:w-4 h-3.5 sm:h-4 flex-shrink-0" />
+                <span className="hidden sm:inline">Clear filters</span>
+                <span className="sm:hidden">Clear</span>
               </motion.button>
             )}
           </div>
@@ -432,10 +438,10 @@ export default function Search() {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="bg-white p-6 rounded-lg border-2 border-amber-100 grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-white p-4 sm:p-6 rounded-lg border-2 border-amber-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6">
               {/* Category Filter */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                   Category
                 </label>
                 <select
@@ -444,7 +450,7 @@ export default function Search() {
                     setSelectedCategory(e.target.value);
                     setSearchQuery("");
                   }}
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                  className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none text-xs sm:text-sm"
                 >
                   <option value="">All Categories</option>
                   {categories.map((cat: any) => (
@@ -457,7 +463,7 @@ export default function Search() {
 
               {/* Min Price */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                   Min Price ($)
                 </label>
                 <input
@@ -469,13 +475,13 @@ export default function Search() {
                     )
                   }
                   placeholder="0"
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                  className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none text-xs sm:text-sm"
                 />
               </div>
 
               {/* Max Price */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                   Max Price ($)
                 </label>
                 <input
@@ -487,19 +493,19 @@ export default function Search() {
                     )
                   }
                   placeholder="10000"
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                  className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none text-xs sm:text-sm"
                 />
               </div>
 
               {/* Sort By */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                   Sort By
                 </label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none"
+                  className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none text-xs sm:text-sm"
                 >
                   <option value="newest">Newest</option>
                   <option value="price-asc">Price: Low to High</option>
@@ -518,27 +524,27 @@ export default function Search() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
               <div className="flex-1">
                 {isLoading ? (
                   <motion.div
                     animate={{ opacity: [0.6, 1, 0.6] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-2 sm:gap-3"
                   >
-                    <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-                    <p className="text-lg text-gray-700 font-medium">
+                    <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-amber-500 rounded-full animate-pulse" />
+                    <p className="text-xs sm:text-base lg:text-lg text-gray-700 font-medium">
                       Searching...
                     </p>
                   </motion.div>
                 ) : isError ? (
-                  <p className="text-red-600 font-medium">
+                  <p className="text-red-600 font-medium text-xs sm:text-sm">
                     Error loading results
                   </p>
                 ) : resultCount === 0 ? (
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-xs sm:text-sm">
                     No products found
                     {selectedCategory && (
                       <>
