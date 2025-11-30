@@ -22,12 +22,35 @@ export interface AdvancedProductParams extends PaginationParams {
 // Product Endpoints
 export const productApi = {
   // Get all products
-  getAll: (params?: PaginationParams) =>
-    apiClient.get<ApiResponse<ProductsResponse>>("/products", { params }),
+  getAll: async (params?: PaginationParams) => {
+    console.log("[PRODUCT API] Fetching all products...", params);
+    try {
+      const response = await apiClient.get<ApiResponse<ProductsResponse>>("/products", { params });
+      console.log("[PRODUCT API] ✅ Success - Products fetched:", response.data.data.products.length);
+      return response;
+    } catch (err: any) {
+      console.error("[PRODUCT API] ❌ Failed to fetch products:", {
+        message: err.message,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        url: err.config?.url,
+      });
+      throw err;
+    }
+  },
 
   // Get products with advanced filtering
-  getAdvanced: (params?: AdvancedProductParams) =>
-    apiClient.get<ApiResponse<ProductsResponse>>("/products/search/advanced", { params }),
+  getAdvanced: async (params?: AdvancedProductParams) => {
+    console.log("[PRODUCT API] Fetching advanced products...", params);
+    try {
+      const response = await apiClient.get<ApiResponse<ProductsResponse>>("/products/search/advanced", { params });
+      console.log("[PRODUCT API] ✅ Success - Advanced products fetched:", response.data.data.products.length);
+      return response;
+    } catch (err: any) {
+      console.error("[PRODUCT API] ❌ Failed to fetch advanced products:", err.message);
+      throw err;
+    }
+  },
 
   // Get single product by slug
   getBySlug: (slug: string) =>

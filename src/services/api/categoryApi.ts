@@ -10,8 +10,21 @@ import {
 // Category Endpoints
 export const categoryApi = {
   // Get all categories
-  getAll: () =>
-    apiClient.get<ApiResponse<CategoriesResponse>>("/categories"),
+  getAll: async () => {
+    console.log("[CATEGORY API] Fetching all categories...");
+    try {
+      const response = await apiClient.get<ApiResponse<CategoriesResponse>>("/categories");
+      console.log("[CATEGORY API] ✅ Success - Categories fetched:", response.data.data.categories.length);
+      return response;
+    } catch (err: any) {
+      console.error("[CATEGORY API] ❌ Failed to fetch categories:", {
+        message: err.message,
+        status: err.response?.status,
+        url: err.config?.url,
+      });
+      throw err;
+    }
+  },
 
   // Get single category by slug
   getBySlug: (slug: string) =>
