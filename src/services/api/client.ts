@@ -53,6 +53,19 @@ class ApiClient {
           code: err.code,
         });
         
+        // Log network errors specifically for mobile debugging
+        if (!err.response) {
+          console.error(
+            "[API NETWORK ERROR] Failed to connect to backend. Check if:",
+            {
+              backendURL: API_BASE_URL,
+              networkType: (navigator as any).connection?.effectiveType,
+              message: err.message,
+              code: err.code,
+            }
+          );
+        }
+        
         if (err.response?.status === 401) {
           // Handle unauthorized - clear token and redirect
           localStorage.removeItem("authToken");
