@@ -41,6 +41,9 @@ export default function Products() {
   const [quickViewZoom, setQuickViewZoom] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const productsPerPage = 12;
 
   // Detect mobile on mount and resize
@@ -68,12 +71,16 @@ export default function Products() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await apiClient.get("/products?limit=100");
+        // Fetch first page with 12 products
+        const response = await apiClient.get(`/products?limit=${productsPerPage}&page=1`);
 
         // Backend returns: { success, message, data: { products, pagination } }
-        // Axios wraps it in response.data, so we need response.data.data.products
         const productsData = (response.data as any)?.data?.products || [];
+        const paginationData = (response.data as any)?.data?.pagination || {};
+        
         setProducts(productsData);
+        setTotalProducts(paginationData.totalCount || 0);
+        setHasMoreProducts(paginationData.hasNextPage || false);
         setError(null);
       } catch (err: any) {
         console.error("Failed to fetch products:", err);
@@ -88,6 +95,29 @@ export default function Products() {
 
     fetchProducts();
   }, []);
+
+  // Fetch next page of products
+  const loadMoreProducts = async () => {
+    try {
+      setLoadingMore(true);
+      const nextPage = currentPage + 1;
+      const response = await apiClient.get(
+        `/products?limit=${productsPerPage}&page=${nextPage}`
+      );
+
+      const productsData = (response.data as any)?.data?.products || [];
+      const paginationData = (response.data as any)?.data?.pagination || {};
+
+      // Append new products to existing ones
+      setProducts((prev) => [...prev, ...productsData]);
+      setCurrentPage(nextPage);
+      setHasMoreProducts(paginationData.hasNextPage || false);
+    } catch (err: any) {
+      console.error("Failed to load more products:", err);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-100/60 via-white to-orange-100/60 overflow-hidden">
@@ -254,34 +284,22 @@ export default function Products() {
             </div>
           ) : products.length > 0 ? (
             <>
-              {/* Calculate paginated products */}
-              {(() => {
-                const indexOfLastProduct = currentPage * productsPerPage;
-                const indexOfFirstProduct =
-                  indexOfLastProduct - productsPerPage;
-                const currentProducts = products.slice(
-                  indexOfFirstProduct,
-                  indexOfLastProduct
-                );
-                const totalPages = Math.ceil(products.length / productsPerPage);
-
-                return (
-                  <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                      {currentProducts.map((product) => (
-                        <motion.div
-                          key={product._id}
-                          variants={itemVariants}
-                          initial="hidden"
-                          whileInView="visible"
-                          viewport={{
-                            once: true,
-                            margin: "0px 0px -100px 0px",
-                          }}
-                          onMouseEnter={() => setHoveredProductId(product._id)}
-                          onMouseLeave={() => setHoveredProductId(null)}
-                          className="group"
-                        >
+              {/* Display all loaded products */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                {products.map((product) => (
+                  <motion.div
+                    key={product._id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{
+                      once: true,
+                      margin: "0px 0px -100px 0px",
+                    }}
+                    onMouseEnter={() => setHoveredProductId(product._id)}
+                    onMouseLeave={() => setHoveredProductId(null)}
+                    className="group"
+                  >
                           <div className="h-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group hover:-translate-y-2">
                             {/* Image Container */}
                             <div className="relative w-full h-40 sm:h-48 lg:h-56 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
@@ -434,58 +452,29 @@ export default function Products() {
                           </div>
                         </motion.div>
                       ))}
-                    </div>
+                </div>
 
-                    {/* Pagination Controls */}
-                    {totalPages > 1 && (
-                      <div className="flex justify-center items-center gap-2 sm:gap-4 mt-12 sm:mt-16 lg:mt-20">
-                        <button
-                          onClick={() => {
-                            setCurrentPage((prev) => Math.max(prev - 1, 1));
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          disabled={currentPage === 1}
-                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          ← Previous
-                        </button>
-
-                        <div className="flex gap-1 sm:gap-2">
-                          {[...Array(totalPages)].map((_, index) => (
-                            <button
-                              key={index + 1}
-                              onClick={() => {
-                                setCurrentPage(index + 1);
-                                window.scrollTo({ top: 0, behavior: "smooth" });
-                              }}
-                              className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all ${
-                                currentPage === index + 1
-                                  ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg"
-                                  : "bg-white text-gray-700 hover:bg-amber-100 border border-amber-200"
-                              }`}
-                            >
-                              {index + 1}
-                            </button>
-                          ))}
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            setCurrentPage((prev) =>
-                              Math.min(prev + 1, totalPages)
-                            );
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          disabled={currentPage === totalPages}
-                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Next →
-                        </button>
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
+                {/* Load More Button */}
+                {hasMoreProducts && (
+                  <div className="flex justify-center mt-12 sm:mt-16 lg:mt-20">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={loadMoreProducts}
+                      disabled={loadingMore}
+                      className="px-8 sm:px-12 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loadingMore ? (
+                        <span className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Loading...
+                        </span>
+                      ) : (
+                        `Load More Products (${products.length}/${totalProducts})`
+                      )}
+                    </motion.button>
+                  </div>
+                )}
             </>
           ) : !loading && products.length === 0 ? (
             <div className="text-center py-12 sm:py-16 lg:py-20">
