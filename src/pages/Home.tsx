@@ -133,20 +133,21 @@ export default function Home() {
       const apiProducts = (res as any).data?.data?.products || [];
 
       // Transform API products to match ProductGrid component format
-      const transformedProducts = apiProducts.map((product: any) => ({
-        id: product._id,
-        name: product.name,
-        price: product.price,
-        image:
-          product.images && product.images.length > 0
-            ? product.images.find((img: any) => img.isPrimary)?.url ||
-              product.images[0]?.url
-            : "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&h=400&fit=crop",
-        rating: product.rating || 4.5,
-        reviewCount: product.reviews || 0,
-        inStock: product.stock > 0,
-        images: product.images || [], // Include full images array for quick view
-      }));
+      const transformedProducts = apiProducts.map((product: any) => {
+        // Get primary image or first image - optimized
+        const primaryImage = product.images?.find((img: any) => img.isPrimary) || product.images?.[0];
+        
+        return {
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          image: primaryImage?.url || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&h=400&fit=crop",
+          rating: product.rating || 4.5,
+          reviewCount: product.reviews || 0,
+          inStock: product.stock > 0,
+          images: [primaryImage].filter(Boolean), // Only primary image for quick view
+        };
+      });
 
       setProducts(transformedProducts);
     } catch (err) {
