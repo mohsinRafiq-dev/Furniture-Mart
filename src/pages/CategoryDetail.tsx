@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiClient } from "../services/api/client";
+import { OptimizedImage } from "../components/OptimizedImage";
 import {
   ArrowLeft,
   Eye,
@@ -46,12 +47,13 @@ export default function CategoryDetail() {
 
       setCategory(selectedCategory);
 
-      // Fetch products for this category with a higher limit to get all products
-      const productsRes = await apiClient.get<any>("/products?limit=100");
-      const allProducts = productsRes.data?.data?.products || [];
-      const categoryProducts = allProducts.filter(
-        (product: any) => product.category === selectedCategory.name
+      // Fetch products for this category using category filter for better performance
+      const productsRes = await apiClient.get<any>(
+        `/products?category=${encodeURIComponent(
+          selectedCategory.name
+        )}&limit=100`
       );
+      const categoryProducts = productsRes.data?.data?.products || [];
 
       setProducts(categoryProducts);
     } catch (error) {
@@ -95,12 +97,12 @@ export default function CategoryDetail() {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.3,
         ease: "easeOut",
       },
     },
@@ -182,15 +184,19 @@ export default function CategoryDetail() {
                     {/* Image Container */}
                     <div className="relative w-full h-64 overflow-hidden bg-gradient-to-br from-amber-100 to-orange-100">
                       {product.images && product.images.length > 0 ? (
-                        <motion.img
-                          src={product.images[0].url}
-                          alt={product.images[0].alt || product.name}
-                          className="w-full h-full object-cover"
+                        <motion.div
+                          className="w-full h-full"
                           animate={{
                             scale: hoveredProductId === product._id ? 1.1 : 1,
                           }}
-                          transition={{ duration: 0.5 }}
-                        />
+                          transition={{ duration: 0.4 }}
+                        >
+                          <OptimizedImage
+                            src={product.images[0].url}
+                            alt={product.images[0].alt || product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </motion.div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-6xl">
                           🛋️

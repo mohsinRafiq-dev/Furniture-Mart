@@ -10,6 +10,7 @@ import {
   Search,
   Filter,
   ImagePlus,
+  Package,
 } from "lucide-react";
 import Cropper from "react-easy-crop";
 import toast from "react-hot-toast";
@@ -418,7 +419,11 @@ export default function ProductsManagement({
             <div className="relative h-48 bg-gray-100 overflow-hidden">
               {product.images && product.images.length > 0 ? (
                 <img
-                  src={product.images[0].url || product.images[0]}
+                  src={
+                    typeof product.images[0] === "string"
+                      ? product.images[0]
+                      : product.images[0].url
+                  }
                   alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />

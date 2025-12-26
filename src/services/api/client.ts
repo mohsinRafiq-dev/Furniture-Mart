@@ -12,17 +12,23 @@ const isDev = import.meta.env.DEV;
 const log = (...args: any[]) => isDev && console.log(...args);
 const error = (...args: any[]) => isDev && console.error(...args);
 
-// Always log in production to debug
-console.log("[API Client DEBUG] VITE_API_URL env:", import.meta.env.VITE_API_URL);
-console.log("[API Client DEBUG] VITE_API_BASE_URL env:", import.meta.env.VITE_API_BASE_URL);
-console.log("[API Client DEBUG] Environment PROD:", import.meta.env.PROD);
-console.log("[API Client DEBUG] Final API_BASE_URL:", API_BASE_URL);
+// Only log in development for debugging
+if (isDev) {
+  console.log("[API Client DEBUG] VITE_API_URL env:", import.meta.env.VITE_API_URL);
+  console.log("[API Client DEBUG] VITE_API_BASE_URL env:", import.meta.env.VITE_API_BASE_URL);
+  console.log("[API Client DEBUG] Environment PROD:", import.meta.env.PROD);
+  console.log("[API Client DEBUG] Final API_BASE_URL:", API_BASE_URL);
+}
 
 class ApiClient {
   private client: AxiosInstance;
+  private cache: Map<string, { data: any; timestamp: number }> = new Map();
+  private CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
 
   constructor() {
-    console.log("[API Client] Initializing with baseURL:", API_BASE_URL);
+    if (isDev) {
+      console.log("[API Client] Initializing with baseURL:", API_BASE_URL);
+    }
     
     this.client = axios.create({
       baseURL: API_BASE_URL,
@@ -80,15 +86,36 @@ class ApiClient {
     );
   }
 
-  // GET requests with retry logic for mobile networks
-  async get<T>(url: string, config = {}, retries = 3) {
+  // GET requests with retry logic and caching for mobile networks
+  async get<T>(url: string, config: any = {}, retries = 3) {
+    // Check cache first for cacheable requests (products list and categories)
+    const useCache = config.cache !== false && (url.includes('/products') || url.includes('/categories'));
+    const cacheKey = `${url}`;
+    
+    if (useCache) {
+      const cached = this.cache.get(cacheKey);
+      if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
+        log(`[API CACHE HIT] ${url}`);
+        return { data: cached.data } as any;
+      }
+    }
+    
     let lastError: any;
     
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        console.log(`[API GET] Attempt ${attempt}/${retries} for ${url}`);
+        log(`[API GET] Attempt ${attempt}/${retries} for ${url}`);
         const response = await this.client.get<T>(url, config);
-        console.log(`[API GET SUCCESS] ${url} on attempt ${attempt}`);
+        log(`[API GET SUCCESS] ${url} on attempt ${attempt}`);
+        
+        // Cache successful responses
+        if (useCache && response.data) {
+          this.cache.set(cacheKey, {
+            data: response.data,
+            timestamp: Date.now(),
+          });
+        }
+        
         return response;
       } catch (err: any) {
         lastError = err;
@@ -130,6 +157,20 @@ class ApiClient {
   // PATCH requests
   patch<T>(url: string, data?: any, config = {}) {
     return this.client.patch<T>(url, data, config);
+  }
+
+  // Clear cache utility method
+  clearCache(pattern?: string) {
+    if (pattern) {
+      const keys = Array.from(this.cache.keys());
+      keys.forEach(key => {
+        if (key.includes(pattern)) {
+          this.cache.delete(key);
+        }
+      });
+    } else {
+      this.cache.clear();
+    }
   }
 }
 

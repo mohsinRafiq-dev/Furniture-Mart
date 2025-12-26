@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../services/api/client";
-import { ArrowRight, Loader, Sparkles } from "lucide-react";
+import { OptimizedImage } from "../components/OptimizedImage";
+import { Loader, Sparkles } from "lucide-react";
 
 export default function Categories() {
   const navigate = useNavigate();
@@ -29,24 +30,24 @@ export default function Categories() {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
+  // const containerVariants = {
+  //   hidden: { opacity: 0 },
+  //   visible: {
+  //     opacity: 1,
+  //     transition: {
+  //       staggerChildren: 0.1,
+  //       delayChildren: 0.2,
+  //     },
+  //   },
+  // };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.3,
         ease: "easeOut",
       },
     },
@@ -259,7 +260,7 @@ export default function Categories() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-3 sm:px-6 lg:px-8 w-full">
               {categories.length > 0 ? (
-                categories.map((category, index) => (
+                categories.map((category) => (
                   <motion.div
                     key={category._id || category.name}
                     variants={itemVariants}
@@ -285,10 +286,8 @@ export default function Categories() {
                         <div className="absolute inset-0 bg-gradient-to-br from-amber-100/20 to-orange-100/20 z-10" />
 
                         {category.image ? (
-                          <motion.img
-                            src={category.image}
-                            alt={category.name}
-                            className="w-full h-full object-cover absolute inset-0"
+                          <motion.div
+                            className="w-full h-full absolute inset-0"
                             animate={{
                               scale:
                                 hoveredId === (category._id || category.name)
@@ -300,7 +299,13 @@ export default function Categories() {
                                   : "blur(0px)",
                             }}
                             transition={{ duration: 0.4 }}
-                          />
+                          >
+                            <OptimizedImage
+                              src={category.image}
+                              alt={category.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </motion.div>
                         ) : (
                           <div className="text-4xl sm:text-5xl lg:text-6xl relative z-20">
                             🛋️

@@ -35,7 +35,7 @@ export const storeTokenInLocalStorage = (token: string): void => {
  * JavaScript cannot access HttpOnly cookies (XSS protection)
  * Backend automatically sets this on login
  */
-export const storeTokenInCookie = (token: string, maxAge: number = 86400): void => {
+export const storeTokenInCookie = (_token: string, _maxAge: number = 86400): void => {
   try {
     // Frontend cannot directly set HttpOnly cookies (security feature)
     // This is now handled by the backend in auth.ts
@@ -181,7 +181,7 @@ export const getStoredToken = (): string | null => {
  * Store token in sessionStorage only
  * Backend automatically sets HttpOnly cookie
  */
-export const storeTokenInBoth = (token: string, maxAge: number = 86400): void => {
+export const storeTokenInBoth = (token: string, _maxAge: number = 86400): void => {
   storeTokenInLocalStorage(token);
   // HttpOnly cookie is automatic from backend
 };

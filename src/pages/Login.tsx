@@ -242,7 +242,7 @@ const Login: React.FC = () => {
                 onError={() => {
                   setError("Google login failed. Please try again.");
                 }}
-                theme="dark"
+                theme="filled_blue"
                 size="large"
               />
             </div>

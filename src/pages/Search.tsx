@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import SearchInput from "../components/SearchInput";
@@ -7,11 +7,7 @@ import SearchStats from "../components/SearchStats";
 import { Filter, ChevronRight, Sparkles, X, TrendingUp } from "lucide-react";
 import { apiClient } from "../services/api/client";
 import { useDebounce } from "../hooks/useDebounce";
-import {
-  rankProducts,
-  analyzeSearchResults,
-  extractSearchKeywords,
-} from "../utils/searchEngine";
+import { rankProducts, analyzeSearchResults } from "../utils/searchEngine";
 
 interface SearchSuggestion {
   id: string;
@@ -291,7 +287,7 @@ export default function Search() {
 
   const clearFilters = () => {
     setSearchQuery("");
-    setDebouncedQuery("");
+
     setSelectedCategory("");
     setMinPrice(undefined);
     setMaxPrice(undefined);
